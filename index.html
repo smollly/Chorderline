@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chorderline</title>
+  <style>
+    body {
+      font-family: monospace;
+      background-color: #111;
+      color: #eee;
+      padding: 20px;
+    }
+    h1 {
+      color: hotpink;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    .section {
+      margin-bottom: 25px;
+      border-bottom: 1px solid #444;
+      padding-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Chorderline </3</h1>
+
+  <div class="section">
+    <h2>Key Selection</h2>
+    <label for="key">Key:</label>
+    <select id="key">
+      <option value="C">C</option>
+      <option value="C#">C# / Db</option>
+      <option value="D">D</option>
+      <option value="D#">D# / Eb</option>
+      <option value="E">E</option>
+      <option value="F">F</option>
+      <option value="F#">F# / Gb</option>
+      <option value="G">G</option>
+      <option value="G#">G# / Ab</option>
+      <option value="A">A</option>
+      <option value="A#">A# / Bb</option>
+      <option value="B">B</option>
+    </select>
+
+    <label for="mode">Mode:</label>
+    <select id="mode">
+      <option value="major">Major</option>
+      <option value="minor">Minor</option>
+    </select>
+  </div>
+
+  <div class="section">
+    <h2>Tempo</h2>
+    <label for="tempo">BPM:</label>
+    <input type="number" id="tempo" min="40" max="240" value="120">
+  </div>
+
+  <div class="section">
+    <h2>Time Signature</h2>
+    <label for="timesig">Select Time Signature:</label>
+    <select id="timesig">
+      <option value="4/4">4/4</option>
+      <option value="3/4">3/4</option>
+      <option value="6/8">6/8</option>
+      <option value="7/8">7/8 (math rock core)</option>
+    </select>
+  </div>
+
+  <div class="section">
+    <h2>Chord Progression Selection</h2>
+    <p>Tick what progressions the generator can use:</p>
+    <label><input type="checkbox" value="I-IV-V-vi"> I - IV - V - vi</label>
+    <label><input type="checkbox" value="V-vi-I-ii"> V - vi - I - ii</label>
+    <label><input type="checkbox" value="vi-IV-I-V"> vi - IV - I - V</label>
+    <label><input type="checkbox" value="i-bVII-bVI-V"> i - ♭VII - ♭VI - V</label>
+    <!-- add more later -->
+  </div>
+
+  <div class="section">
+    <h2>Custom Chord Progression</h2>
+    <label for="customProg">Write your own (e.g. I - vi - IV - V):</label>
+    <input type="text" id="customProg" placeholder="I - vi - IV - V" style="width: 100%;">
+  </div>
+
+  <div class="section">
+    <h2>Rhythm Pattern</h2>
+    <label for="rhythm">Choose a rhythm pattern:</label>
+    <select id="rhythm">
+      <option value="stabs">Staccato Stabs</option>
+      <option value="drone">Droning Strums</option>
+      <option value="16ths">16th Note Machine</option>
+      <option value="jerky">Jerky Offbeat</option>
+    </select>
+
+    <label for="customRhythm">Or enter a custom pattern (e.g. 1e&a 2e&a ...):</label>
+    <input type="text" id="customRhythm" placeholder="x--- x-x- -x-- xxxx" style="width: 100%;">
+  </div>
+
+  <div class="section">
+    <button onclick="randomize()">🎲 Randomize!</button>
+    <pre id="output">Your random punk awaits...</pre>
+  </div>
+
+  <script>
+    function randomize() {
+      const key = document.getElementById("key").value;
+      const mode = document.getElementById("mode").value;
+      const tempo = document.getElementById("tempo").value;
+      const timesig = document.getElementById("timesig").value;
+      const rhythm = document.getElementById("rhythm").value;
+      const customRhythm = document.getElementById("customRhythm").value;
+      const customProg = document.getElementById("customProg").value;
+
+      const chordCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+      const pickedProgressions = Array.from(chordCheckboxes).map(cb => cb.value);
+
+      const output = document.getElementById("output");
+      output.textContent = `Key: ${key} ${mode}\nTempo: ${tempo} bpm\nTime Sig: ${timesig}\n\nChord Prog: ${
+        customProg || (pickedProgressions.length ? pickedProgressions[Math.floor(Math.random() * pickedProgressions.length)] : "None selected!")
+      }\nRhythm: ${customRhythm || rhythm}`;
+    }
+  </script>
+
+</body>
+</html>
