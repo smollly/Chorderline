@@ -1,6 +1,8 @@
 #  Chorderline
 
-**Chorderline** is a lightweight web-based tool for generating post-punk-inspired chord progressions and rhythm ideas. Designed for guitarists, songwriters, and producers looking to explore new musical directions or break through creative blocks.
+[**Chorderline**](https://smollly.github.io/Chorderline/) is a lightweight web-based tool for generating post-punk-inspired chord progressions and rhythm ideas. Designed for guitarists, songwriters, and producers looking to explore new musical directions or break through creative blocks.
+
+
 
 ---
 
@@ -53,7 +55,7 @@ The entire app is self-contained in a single `index.html` file and can be hosted
 
 ##  About the Project
 
-Chorderline was created by [smolly~~](https://github.com/your-profile), a guitarist and songwriter exploring new creative tools to inspire songwriting, especially in emo, post-punk, and alternative rock styles. The goal was to create a fast, flexible idea generator that bridges music theory and practical composition.
+Chorderline was created by smolly~~, a guitarist and songwriter exploring new creative tools to inspire songwriting, especially in emo, post-punk, and alternative rock styles. The goal was to create a fast, flexible idea generator that bridges music theory and practical composition.
 
 ---
 
