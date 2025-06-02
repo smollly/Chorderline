@@ -1,6 +1,16 @@
-<body style="background-color: #f0f0f0; color: #000; font-family: sans-serif; padding: 20px;">
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chorderline</title>
   <style>
+    body {
+      background-color: #f0f0f0;
+      color: #000;
+      font-family: sans-serif;
+      padding: 20px;
+    }
     .section-box {
       background: white;
       border-radius: 8px;
@@ -27,6 +37,8 @@
       font-size: 1em;
     }
   </style>
+</head>
+<body>
 
   <h1>🎸 Chorderline</h1>
 
@@ -74,7 +86,7 @@
       </div>
       <div>
         <label for="tempo">Tempo (BPM):</label>
-        <input type="number" id="tempo" min="40" max="240" value="120">
+        <input type="number" id="tempo" min="40" max="240" value="120" />
       </div>
       <div>
         <label for="timesig">Time Signature:</label>
@@ -100,26 +112,25 @@
       <button onclick="toggleCheckboxes(false)">Disable All</button>
     </div>
     <div id="chordList">
-      <!-- Static chord options listed here -->
-      <label><input type="checkbox" value="i - VI - III - VII"> i - VI - III - VII</label>
-      <label><input type="checkbox" value="i - iv - V - V"> i - iv - V - V</label>
-      <label><input type="checkbox" value="i - VII - i - VI"> i - VII - i - VI</label>
-      <label><input type="checkbox" value="i - iv - i - iv"> i - iv - i - iv</label>
-      <label><input type="checkbox" value="VI - V - iv - i"> VI - V - iv - i</label>
-      <label><input type="checkbox" value="iv - v - i - i"> iv - v - i - i</label>
-      <label><input type="checkbox" value="v - VI - III - VII"> v - VI - III - VII</label>
-      <label><input type="checkbox" value="i - v - VI - III"> i - v - VI - III</label>
-      <label><input type="checkbox" value="iv - i - VII - i"> iv - i - VII - i</label>
-      <label><input type="checkbox" value="VII - i - VII - VI"> VII - i - VII - VI</label>
-      <label><input type="checkbox" value="i - V - i - VII"> i - V - i - VII</label>
-      <label><input type="checkbox" value="i - ii - V - i"> i - ii - V - i</label>
-      <label><input type="checkbox" value="VI - VII - i - iv"> VI - VII - i - iv</label>
-      <label><input type="checkbox" value="v - i - iv - i"> v - i - iv - i</label>
-      <label><input type="checkbox" value="VII - VI - i - V"> VII - VI - i - V</label>
+      <label><input type="checkbox" value="i - VI - III - VII" /> i - VI - III - VII</label>
+      <label><input type="checkbox" value="i - iv - V - V" /> i - iv - V - V</label>
+      <label><input type="checkbox" value="i - VII - i - VI" /> i - VII - i - VI</label>
+      <label><input type="checkbox" value="i - iv - i - iv" /> i - iv - i - iv</label>
+      <label><input type="checkbox" value="VI - V - iv - i" /> VI - V - iv - i</label>
+      <label><input type="checkbox" value="iv - v - i - i" /> iv - v - i - i</label>
+      <label><input type="checkbox" value="v - VI - III - VII" /> v - VI - III - VII</label>
+      <label><input type="checkbox" value="i - v - VI - III" /> i - v - VI - III</label>
+      <label><input type="checkbox" value="iv - i - VII - i" /> iv - i - VII - i</label>
+      <label><input type="checkbox" value="VII - i - VII - VI" /> VII - i - VII - VI</label>
+      <label><input type="checkbox" value="i - V - i - VII" /> i - V - i - VII</label>
+      <label><input type="checkbox" value="i - ii - V - i" /> i - ii - V - i</label>
+      <label><input type="checkbox" value="VI - VII - i - iv" /> VI - VII - i - iv</label>
+      <label><input type="checkbox" value="v - i - iv - i" /> v - i - iv - i</label>
+      <label><input type="checkbox" value="VII - VI - i - V" /> VII - VI - i - V</label>
     </div>
     <div style="margin-top: 15px;">
       <label for="customProg">Custom progression (optional):</label>
-      <input type="text" id="customProg" placeholder="e.g. i - iv - ♭VII - V">
+      <input type="text" id="customProg" placeholder="e.g. i - iv - ♭vii - v" />
       <button onclick="addCustomProg()">✔️</button>
     </div>
   </div>
@@ -137,7 +148,7 @@
     </div>
     <div style="margin-top: 10px;">
       <label for="customRhythm">Or enter custom pattern:</label>
-      <input type="text" id="customRhythm" placeholder="e.g. x--- x-x- -x-- xxxx">
+      <input type="text" id="customRhythm" placeholder="e.g. x--- x-x- -x-- xxxx" />
     </div>
   </div>
 
@@ -148,46 +159,49 @@
 
   <script>
     function showPage(pageId) {
-      document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+      document.querySelectorAll('.page').forEach((page) => (page.style.display = 'none'));
       document.getElementById(pageId).style.display = 'block';
     }
 
     function toggleCheckboxes(state) {
       const checkboxes = document.querySelectorAll('#chordList input[type="checkbox"]');
-      checkboxes.forEach(cb => cb.checked = state);
+      checkboxes.forEach((cb) => (cb.checked = state));
     }
 
     function addCustomProg() {
-      const input = document.getElementById("customProg");
+      const input = document.getElementById('customProg');
       const val = input.value.trim();
-      const validRoman = /^([iIvV]+|[b♭]?[iIvV]+)(\s*-\s*([iIvV]+|[b♭]?[iIvV]+))*$/;
+
+      // Accept only lowercase roman numerals with optional flats ♭ or b
+      const validRoman = /^([b♭]?[iv]+)(\s*-\s*([b♭]?[iv]+))*$/;
 
       if (!validRoman.test(val)) {
-        alert("Invalid progression format. Please use Roman numerals only (e.g. i - iv - bVII - V)");
+        alert('Invalid progression format. Please use lowercase Roman numerals only (e.g. i - iv - ♭vii - v)');
         return;
       }
 
-      const wrapper = document.createElement("label");
-      wrapper.className = "custom-prog-entry";
+      const wrapper = document.createElement('label');
+      wrapper.className = 'custom-prog-entry';
 
-      const cb = document.createElement("input");
-      cb.type = "checkbox";
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
       cb.checked = true;
       cb.value = val;
 
-      const text = document.createTextNode(" " + val);
+      const text = document.createTextNode(' ' + val);
 
-      const removeBtn = document.createElement("button");
-      removeBtn.innerText = "✖";
+      const removeBtn = document.createElement('button');
+      removeBtn.innerText = '✖';
       removeBtn.onclick = () => wrapper.remove();
 
       wrapper.appendChild(cb);
       wrapper.appendChild(text);
       wrapper.appendChild(removeBtn);
 
-      document.getElementById("chordList").appendChild(wrapper);
-      input.value = "";
+      document.getElementById('chordList').appendChild(wrapper);
+      input.value = '';
     }
   </script>
 
 </body>
+</html>
