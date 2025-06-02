@@ -1,109 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Chorderline</title>
-  <style>
-    body {
-      font-family: monospace;
-      background-color: #f0f0f0;
-      color: #111;
-      padding: 20px;
-      max-width: 900px;
-      margin: auto;
-    }
-
-    h1 {
-      color: #222;
-      text-align: center;
-    }
-
-    .navbar {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      justify-content: center;
-    }
-
-    .navbar button {
-      background: #ddd;
-      border: none;
-      padding: 10px 20px;
-      font-family: monospace;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 6px;
-    }
-
-    .navbar button:hover {
-      background: #bbb;
-    }
-
-    .section {
-      margin-bottom: 25px;
-      padding: 15px;
-      border-radius: 8px;
-      background-color: #fff;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    }
-
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      align-items: center;
-    }
-
-    .input-group {
-      flex: 1;
-      min-width: 200px;
-    }
-
-    label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 5px;
-      font-family: monospace;
-    }
-
-    button {
-      padding: 10px 20px;
-      background-color: #111;
-      color: white;
-      border: none;
-      font-family: monospace;
-      cursor: pointer;
-      font-weight: bold;
-      border-radius: 5px;
-    }
-
-    button:hover {
-      background-color: #444;
-    }
-
-    #output {
-      background-color: #eee;
-      padding: 15px;
-      margin-top: 10px;
-      border-radius: 5px;
-      white-space: pre-wrap;
-    }
-
-    .page {
-      display: none;
-    }
-
-    .page.active {
-      display: block;
-    }
-  </style>
-</head>
 <body>
 
   <h1>🎸 Chorderline</h1>
@@ -111,22 +5,23 @@
   <!-- Navigation -->
   <nav class="navbar">
     <button onclick="showPage('info')">Info</button>
+    <button onclick="showPage('setup')">Setup</button>
     <button onclick="showPage('chord')">Chord</button>
     <button onclick="showPage('rhythm')">Rhythm</button>
     <button onclick="showPage('preview')">Preview</button>
   </nav>
 
-  <!-- Page Sections -->
+  <!-- Pages -->
   <div id="info" class="page active">
     <div class="section">
-      <h2>Info</h2>
-      <p>Welcome to Chorderline — a tool for generating post-punk chord progressions and rhythms. Select a page above to begin building your track.</p>
+      <h2>Welcome to Chorderline</h2>
+      <p>This is a random post-punk chord & rhythm generator. Move through each tab to configure your generation. “Setup” handles basic key info, “Chord” handles progressions, and so on. Simple as that.</p>
     </div>
   </div>
 
-  <div id="chord" class="page">
+  <div id="setup" class="page">
     <div class="section">
-      <h2>Chord Settings</h2>
+      <h2>Setup</h2>
       <div class="row">
         <div class="input-group">
           <label for="key">Key:</label>
@@ -170,16 +65,34 @@
         </div>
       </div>
     </div>
+  </div>
 
+  <div id="chord" class="page">
     <div class="section">
       <h2>Chord Progressions</h2>
-      <label><input type="checkbox" value="I-IV-V-vi"> I - IV - V - vi</label><br>
-      <label><input type="checkbox" value="V-vi-I-ii"> V - vi - I - ii</label><br>
-      <label><input type="checkbox" value="vi-IV-I-V"> vi - IV - I - V</label><br>
-      <label><input type="checkbox" value="i-bVII-bVI-V"> i - ♭VII - ♭VI - V</label><br>
+      <p>
+        Select one or more progressions below. Chorderline will pick one at random when generating.
+        These are written using Roman numerals for flexibility across keys and modes.
+        You can also enter your own progression if you don’t see one you like.
+      </p>
+    </div>
 
-      <label for="customProg" style="margin-top: 10px;">Or enter your own:</label>
-      <input type="text" id="customProg" placeholder="e.g. i - iv - V - VI">
+    <div class="section">
+      <label><input type="checkbox" value="i - VI - III - VII"> i - VI - III - VII</label><br>
+      <label><input type="checkbox" value="i - iv - V - V"> i - iv - V - V</label><br>
+      <label><input type="checkbox" value="i - VII - i - VI"> i - VII - i - VI</label><br>
+      <label><input type="checkbox" value="i - iv - i - iv"> i - iv - i - iv</label><br>
+      <label><input type="checkbox" value="VI - V - iv - i"> VI - V - iv - i</label><br>
+      <label><input type="checkbox" value="iv - v - i - i"> iv - v - i - i</label><br>
+      <label><input type="checkbox" value="v - VI - III - VII"> v - VI - III - VII</label><br>
+      <label><input type="checkbox" value="i - v - VI - III"> i - v - VI - III</label><br>
+      <label><input type="checkbox" value="iv - i - VII - i"> iv - i - VII - i</label><br>
+      <label><input type="checkbox" value="VII - i - VII - VI"> VII - i - VII - VI</label><br>
+    </div>
+
+    <div class="section">
+      <label for="customProg">Custom progression (optional):</label>
+      <input type="text" id="customProg" placeholder="e.g. i - iv - ♭VII - V">
     </div>
   </div>
 
@@ -208,7 +121,7 @@
   <div id="preview" class="page">
     <div class="section">
       <h2>Preview</h2>
-      <p>(This space is reserved for your future genius.)</p>
+      <p>(Still under construction — this is where generation will happen!)</p>
     </div>
   </div>
 
@@ -222,4 +135,3 @@
   </script>
 
 </body>
-</html>
