@@ -19,6 +19,27 @@
       text-align: center;
     }
 
+    .navbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .navbar button {
+      background: #ddd;
+      border: none;
+      padding: 10px 20px;
+      font-family: monospace;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    .navbar button:hover {
+      background: #bbb;
+    }
+
     .section {
       margin-bottom: 25px;
       padding: 15px;
@@ -51,12 +72,6 @@
       font-family: monospace;
     }
 
-    .section h2 {
-      margin-top: 0;
-      font-size: 1.2em;
-      margin-bottom: 10px;
-    }
-
     button {
       padding: 10px 20px;
       background-color: #111;
@@ -65,6 +80,7 @@
       font-family: monospace;
       cursor: pointer;
       font-weight: bold;
+      border-radius: 5px;
     }
 
     button:hover {
@@ -78,117 +94,130 @@
       border-radius: 5px;
       white-space: pre-wrap;
     }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
   </style>
 </head>
 <body>
 
   <h1>🎸 Chorderline</h1>
 
-  <div class="section">
-    <h2>Song Settings</h2>
-    <div class="row">
-      <div class="input-group">
-        <label for="key">Key:</label>
-        <select id="key">
-          <option value="C">C</option>
-          <option value="C#">C# / Db</option>
-          <option value="D">D</option>
-          <option value="D#">D# / Eb</option>
-          <option value="E">E</option>
-          <option value="F">F</option>
-          <option value="F#">F# / Gb</option>
-          <option value="G">G</option>
-          <option value="G#">G# / Ab</option>
-          <option value="A">A</option>
-          <option value="A#">A# / Bb</option>
-          <option value="B">B</option>
-        </select>
-      </div>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <button onclick="showPage('info')">Info</button>
+    <button onclick="showPage('chord')">Chord</button>
+    <button onclick="showPage('rhythm')">Rhythm</button>
+    <button onclick="showPage('preview')">Preview</button>
+  </nav>
 
-      <div class="input-group">
-        <label for="mode">Mode:</label>
-        <select id="mode">
-          <option value="major">Major</option>
-          <option value="minor">Minor</option>
-        </select>
-      </div>
+  <!-- Page Sections -->
+  <div id="info" class="page active">
+    <div class="section">
+      <h2>Info</h2>
+      <p>Welcome to Chorderline — a tool for generating post-punk chord progressions and rhythms. Select a page above to begin building your track.</p>
+    </div>
+  </div>
 
-      <div class="input-group">
-        <label for="tempo">Tempo (BPM):</label>
-        <input type="number" id="tempo" min="40" max="240" value="120">
-      </div>
+  <div id="chord" class="page">
+    <div class="section">
+      <h2>Chord Settings</h2>
+      <div class="row">
+        <div class="input-group">
+          <label for="key">Key:</label>
+          <select id="key">
+            <option value="C">C</option>
+            <option value="C#">C# / Db</option>
+            <option value="D">D</option>
+            <option value="D#">D# / Eb</option>
+            <option value="E">E</option>
+            <option value="F">F</option>
+            <option value="F#">F# / Gb</option>
+            <option value="G">G</option>
+            <option value="G#">G# / Ab</option>
+            <option value="A">A</option>
+            <option value="A#">A# / Bb</option>
+            <option value="B">B</option>
+          </select>
+        </div>
 
-      <div class="input-group">
-        <label for="timesig">Time Signature:</label>
-        <select id="timesig">
-          <option value="4/4">4/4</option>
-          <option value="3/4">3/4</option>
-          <option value="6/8">6/8</option>
-          <option value="7/8">7/8</option>
-        </select>
+        <div class="input-group">
+          <label for="mode">Mode:</label>
+          <select id="mode">
+            <option value="major">Major</option>
+            <option value="minor">Minor</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="tempo">Tempo (BPM):</label>
+          <input type="number" id="tempo" min="40" max="240" value="120">
+        </div>
+
+        <div class="input-group">
+          <label for="timesig">Time Signature:</label>
+          <select id="timesig">
+            <option value="4/4">4/4</option>
+            <option value="3/4">3/4</option>
+            <option value="6/8">6/8</option>
+            <option value="7/8">7/8</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Chord Progressions</h2>
+      <label><input type="checkbox" value="I-IV-V-vi"> I - IV - V - vi</label><br>
+      <label><input type="checkbox" value="V-vi-I-ii"> V - vi - I - ii</label><br>
+      <label><input type="checkbox" value="vi-IV-I-V"> vi - IV - I - V</label><br>
+      <label><input type="checkbox" value="i-bVII-bVI-V"> i - ♭VII - ♭VI - V</label><br>
+
+      <label for="customProg" style="margin-top: 10px;">Or enter your own:</label>
+      <input type="text" id="customProg" placeholder="e.g. i - iv - V - VI">
+    </div>
+  </div>
+
+  <div id="rhythm" class="page">
+    <div class="section">
+      <h2>Rhythm</h2>
+      <div class="row">
+        <div class="input-group">
+          <label for="rhythm">Select Pattern:</label>
+          <select id="rhythm">
+            <option value="stabs">Staccato Stabs</option>
+            <option value="drone">Droning Strums</option>
+            <option value="16ths">16th Note Machine</option>
+            <option value="jerky">Jerky Offbeat</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="customRhythm">Or enter custom pattern:</label>
+          <input type="text" id="customRhythm" placeholder="e.g. x--- x-x- -x-- xxxx">
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="section">
-    <h2>Chord Progressions</h2>
-    <p>Select which progressions can be used randomly:</p>
-    <label><input type="checkbox" value="I-IV-V-vi"> I - IV - V - vi</label>
-    <label><input type="checkbox" value="V-vi-I-ii"> V - vi - I - ii</label>
-    <label><input type="checkbox" value="vi-IV-I-V"> vi - IV - I - V</label>
-    <label><input type="checkbox" value="i-bVII-bVI-V"> i - ♭VII - ♭VI - V</label>
-
-    <label for="customProg" style="margin-top: 15px;">Or enter your own:</label>
-    <input type="text" id="customProg" placeholder="e.g. i - iv - V - VI">
-  </div>
-
-  <div class="section">
-    <h2>Rhythm</h2>
-    <div class="row">
-      <div class="input-group">
-        <label for="rhythm">Select Pattern:</label>
-        <select id="rhythm">
-          <option value="stabs">Staccato Stabs</option>
-          <option value="drone">Droning Strums</option>
-          <option value="16ths">16th Note Machine</option>
-          <option value="jerky">Jerky Offbeat</option>
-        </select>
-      </div>
-
-      <div class="input-group">
-        <label for="customRhythm">Or enter custom pattern:</label>
-        <input type="text" id="customRhythm" placeholder="e.g. x--- x-x- -x-- xxxx">
-      </div>
+  <div id="preview" class="page">
+    <div class="section">
+      <h2>Preview</h2>
+      <p>(This space is reserved for your future genius.)</p>
     </div>
-  </div>
-
-  <div class="section">
-    <button onclick="randomize()">🎲 Randomize</button>
-    <div id="output">Your random punk awaits...</div>
   </div>
 
   <script>
-    function randomize() {
-      const key = document.getElementById("key").value;
-      const mode = document.getElementById("mode").value;
-      const tempo = document.getElementById("tempo").value;
-      const timesig = document.getElementById("timesig").value;
-      const rhythm = document.getElementById("rhythm").value;
-      const customRhythm = document.getElementById("customRhythm").value;
-      const customProg = document.getElementById("customProg").value;
-
-      const chordCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-      const pickedProgressions = Array.from(chordCheckboxes).map(cb => cb.value);
-
-      const output = document.getElementById("output");
-      output.textContent = `Key: ${key} ${mode}
-Tempo: ${tempo} bpm
-Time Sig: ${timesig}
-
-Chord Prog: ${
-        customProg || (pickedProgressions.length ? pickedProgressions[Math.floor(Math.random() * pickedProgressions.length)] : "None selected")
-      }
-Rhythm: ${customRhythm || rhythm}`;
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      document.getElementById(pageId).classList.add('active');
     }
   </script>
 
