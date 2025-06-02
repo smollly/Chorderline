@@ -12,6 +12,19 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px 16px;
+      padding-top: 10px;
+    }
+    .custom-prog-entry {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .custom-prog-entry button {
+      background: transparent;
+      border: none;
+      color: red;
+      cursor: pointer;
+      font-size: 1em;
     }
   </style>
 
@@ -82,11 +95,12 @@
       These are written using Roman numerals for flexibility across keys and modes.
       You can also enter your own progression if you don’t see one you like.
     </p>
-    <div>
+    <div style="margin-bottom: 10px;">
       <button onclick="toggleCheckboxes(true)">Apply All</button>
       <button onclick="toggleCheckboxes(false)">Disable All</button>
     </div>
     <div id="chordList">
+      <!-- Static chord options listed here -->
       <label><input type="checkbox" value="i - VI - III - VII"> i - VI - III - VII</label>
       <label><input type="checkbox" value="i - iv - V - V"> i - iv - V - V</label>
       <label><input type="checkbox" value="i - VII - i - VI"> i - VII - i - VI</label>
@@ -106,6 +120,7 @@
     <div style="margin-top: 15px;">
       <label for="customProg">Custom progression (optional):</label>
       <input type="text" id="customProg" placeholder="e.g. i - iv - ♭VII - V">
+      <button onclick="addCustomProg()">✔️</button>
     </div>
   </div>
 
@@ -140,6 +155,38 @@
     function toggleCheckboxes(state) {
       const checkboxes = document.querySelectorAll('#chordList input[type="checkbox"]');
       checkboxes.forEach(cb => cb.checked = state);
+    }
+
+    function addCustomProg() {
+      const input = document.getElementById("customProg");
+      const val = input.value.trim();
+      const validRoman = /^([iIvV]+|[b♭]?[iIvV]+)(\s*-\s*([iIvV]+|[b♭]?[iIvV]+))*$/;
+
+      if (!validRoman.test(val)) {
+        alert("Invalid progression format. Please use Roman numerals only (e.g. i - iv - bVII - V)");
+        return;
+      }
+
+      const wrapper = document.createElement("label");
+      wrapper.className = "custom-prog-entry";
+
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = true;
+      cb.value = val;
+
+      const text = document.createTextNode(" " + val);
+
+      const removeBtn = document.createElement("button");
+      removeBtn.innerText = "✖";
+      removeBtn.onclick = () => wrapper.remove();
+
+      wrapper.appendChild(cb);
+      wrapper.appendChild(text);
+      wrapper.appendChild(removeBtn);
+
+      document.getElementById("chordList").appendChild(wrapper);
+      input.value = "";
     }
   </script>
 
