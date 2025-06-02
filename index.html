@@ -1,9 +1,24 @@
 <body style="background-color: #f0f0f0; color: #000; font-family: sans-serif; padding: 20px;">
 
+  <style>
+    .section-box {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    #chordList {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+    }
+  </style>
+
   <h1>🎸 Chorderline</h1>
 
   <!-- Navigation -->
-  <nav class="navbar" style="margin-bottom: 20px;">
+  <nav class="navbar section-box">
     <button onclick="showPage('info')">Info</button>
     <button onclick="showPage('setup')">Setup</button>
     <button onclick="showPage('chord')">Chord</button>
@@ -12,12 +27,12 @@
   </nav>
 
   <!-- Pages -->
-  <div id="info" class="page active">
+  <div id="info" class="page section-box active">
     <h2>Welcome to Chorderline</h2>
     <p>This is a random post-punk chord & rhythm generator. Move through each tab to configure your generation. “Setup” handles basic key info, “Chord” handles progressions, and so on. Simple as that.</p>
   </div>
 
-  <div id="setup" class="page" style="display:none;">
+  <div id="setup" class="page section-box" style="display:none;">
     <h2>Setup</h2>
     <div style="display: flex; flex-wrap: wrap; gap: 20px;">
       <div>
@@ -60,7 +75,7 @@
     </div>
   </div>
 
-  <div id="chord" class="page" style="display:none;">
+  <div id="chord" class="page section-box" style="display:none;">
     <h2>Chord Progressions</h2>
     <p>
       Select one or more progressions below. Chorderline will pick one at random when generating.
@@ -71,17 +86,22 @@
       <button onclick="toggleCheckboxes(true)">Apply All</button>
       <button onclick="toggleCheckboxes(false)">Disable All</button>
     </div>
-    <div id="chordList" style="margin-top: 10px;">
-      <label><input type="checkbox" value="i - VI - III - VII"> i - VI - III - VII</label><br>
-      <label><input type="checkbox" value="i - iv - V - V"> i - iv - V - V</label><br>
-      <label><input type="checkbox" value="i - VII - i - VI"> i - VII - i - VI</label><br>
-      <label><input type="checkbox" value="i - iv - i - iv"> i - iv - i - iv</label><br>
-      <label><input type="checkbox" value="VI - V - iv - i"> VI - V - iv - i</label><br>
-      <label><input type="checkbox" value="iv - v - i - i"> iv - v - i - i</label><br>
-      <label><input type="checkbox" value="v - VI - III - VII"> v - VI - III - VII</label><br>
-      <label><input type="checkbox" value="i - v - VI - III"> i - v - VI - III</label><br>
-      <label><input type="checkbox" value="iv - i - VII - i"> iv - i - VII - i</label><br>
-      <label><input type="checkbox" value="VII - i - VII - VI"> VII - i - VII - VI</label><br>
+    <div id="chordList">
+      <label><input type="checkbox" value="i - VI - III - VII"> i - VI - III - VII</label>
+      <label><input type="checkbox" value="i - iv - V - V"> i - iv - V - V</label>
+      <label><input type="checkbox" value="i - VII - i - VI"> i - VII - i - VI</label>
+      <label><input type="checkbox" value="i - iv - i - iv"> i - iv - i - iv</label>
+      <label><input type="checkbox" value="VI - V - iv - i"> VI - V - iv - i</label>
+      <label><input type="checkbox" value="iv - v - i - i"> iv - v - i - i</label>
+      <label><input type="checkbox" value="v - VI - III - VII"> v - VI - III - VII</label>
+      <label><input type="checkbox" value="i - v - VI - III"> i - v - VI - III</label>
+      <label><input type="checkbox" value="iv - i - VII - i"> iv - i - VII - i</label>
+      <label><input type="checkbox" value="VII - i - VII - VI"> VII - i - VII - VI</label>
+      <label><input type="checkbox" value="i - V - i - VII"> i - V - i - VII</label>
+      <label><input type="checkbox" value="i - ii - V - i"> i - ii - V - i</label>
+      <label><input type="checkbox" value="VI - VII - i - iv"> VI - VII - i - iv</label>
+      <label><input type="checkbox" value="v - i - iv - i"> v - i - iv - i</label>
+      <label><input type="checkbox" value="VII - VI - i - V"> VII - VI - i - V</label>
     </div>
     <div style="margin-top: 15px;">
       <label for="customProg">Custom progression (optional):</label>
@@ -89,7 +109,7 @@
     </div>
   </div>
 
-  <div id="rhythm" class="page" style="display:none;">
+  <div id="rhythm" class="page section-box" style="display:none;">
     <h2>Rhythm</h2>
     <div>
       <label for="rhythm">Select Pattern:</label>
@@ -106,7 +126,7 @@
     </div>
   </div>
 
-  <div id="preview" class="page" style="display:none;">
+  <div id="preview" class="page section-box" style="display:none;">
     <h2>Preview</h2>
     <p>(Still under construction — this is where generation will happen!)</p>
   </div>
