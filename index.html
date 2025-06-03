@@ -1,34 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Chorderline</title>
+  <script src="https://cdn.jsdelivr.net/npm/tonal/browser/tonal.min.js"></script>
   <style>
+    :root {
+      --background-color: #f0f0f0;
+      --text-color: #000;
+      --section-bg: #fff;
+    }
+    [data-theme="dark"] {
+      --background-color: #121212;
+      --text-color: #fff;
+      --section-bg: #1e1e1e;
+    }
+
     body {
-      background-color: #121212;
-      color: #eee;
+      background-color: var(--background-color);
+      color: var(--text-color);
       font-family: sans-serif;
       padding: 20px;
     }
+
     .section-box {
-      background: #1e1e1e;
+      background: var(--section-bg);
       border-radius: 8px;
       padding: 15px;
       margin-bottom: 20px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
+
     #chordList {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px 16px;
       padding-top: 10px;
     }
+
     .custom-prog-entry {
       display: flex;
       align-items: center;
       gap: 8px;
     }
+
     .custom-prog-entry button {
       background: transparent;
       border: none;
@@ -36,23 +52,30 @@
       cursor: pointer;
       font-size: 1em;
     }
+
+    .navbar button {
+      margin-right: 10px;
+    }
   </style>
 </head>
 <body>
 
   <h1>🎸 Chorderline</h1>
 
+  <!-- Navigation -->
   <nav class="navbar section-box">
     <button onclick="showPage('info')">Info</button>
     <button onclick="showPage('setup')">Setup</button>
     <button onclick="showPage('chord')">Chord</button>
     <button onclick="showPage('rhythm')">Rhythm</button>
     <button onclick="showPage('preview')">Preview</button>
+    <button id="themeToggle">Toggle Dark Mode</button>
   </nav>
 
-  <div id="info" class="page section-box active">
+  <!-- Pages -->
+  <div id="info" class="page section-box">
     <h2>Welcome to Chorderline</h2>
-    <p>This is a random post-punk chord & rhythm generator. Move through each tab to configure your generation.</p>
+    <p>This is a random post-punk chord & rhythm generator. Use the tabs to set up your key/mode, pick a chord progression, choose a rhythm, and generate a musical idea!</p>
   </div>
 
   <div id="setup" class="page section-box" style="display:none;">
@@ -61,12 +84,18 @@
       <div>
         <label for="key">Key:</label>
         <select id="key">
-          <option value="C">C</option><option value="C#">C# / Db</option>
-          <option value="D">D</option><option value="D#">D# / Eb</option>
-          <option value="E">E</option><option value="F">F</option>
-          <option value="F#">F# / Gb</option><option value="G">G</option>
-          <option value="G#">G# / Ab</option><option value="A">A</option>
-          <option value="A#">A# / Bb</option><option value="B">B</option>
+          <option value="C">C</option>
+          <option value="C#">C# / Db</option>
+          <option value="D">D</option>
+          <option value="D#">D# / Eb</option>
+          <option value="E">E</option>
+          <option value="F">F</option>
+          <option value="F#">F# / Gb</option>
+          <option value="G">G</option>
+          <option value="G#">G# / Ab</option>
+          <option value="A">A</option>
+          <option value="A#">A# / Bb</option>
+          <option value="B">B</option>
         </select>
       </div>
       <div>
@@ -94,13 +123,12 @@
 
   <div id="chord" class="page section-box" style="display:none;">
     <h2>Chord Progressions</h2>
-    <p>Select one or more progressions. Chorderline will pick one at random when generating.</p>
-    <div style="margin-bottom: 10px;">
+    <p>Select one or more progressions below. These are in Roman numerals so they adapt to your selected key and mode.</p>
+    <div style="margin-bottom: 10px; padding-top: 8px;">
       <button onclick="toggleCheckboxes(true)">Apply All</button>
       <button onclick="toggleCheckboxes(false)">Disable All</button>
     </div>
     <div id="chordList">
-      <!-- Pop punk banger progressions -->
       <label><input type="checkbox" value="I - V - IV" /> I - V - IV</label>
       <label><input type="checkbox" value="I - V - vi - IV" /> I - V - vi - IV</label>
       <label><input type="checkbox" value="V - vi - IV" /> V - vi - IV</label>
@@ -132,13 +160,15 @@
 
   <div id="rhythm" class="page section-box" style="display:none;">
     <h2>Rhythm</h2>
-    <label for="rhythm">Select Pattern:</label>
-    <select id="rhythm">
-      <option value="stabs">Staccato Stabs</option>
-      <option value="drone">Droning Strums</option>
-      <option value="16ths">16th Note Machine</option>
-      <option value="jerky">Jerky Offbeat</option>
-    </select>
+    <div>
+      <label for="rhythm">Select Pattern:</label>
+      <select id="rhythm">
+        <option value="stabs">Staccato Stabs</option>
+        <option value="drone">Droning Strums</option>
+        <option value="16ths">16th Note Machine</option>
+        <option value="jerky">Jerky Offbeat</option>
+      </select>
+    </div>
     <div style="margin-top: 10px;">
       <label for="customRhythm">Or enter custom pattern:</label>
       <input type="text" id="customRhythm" placeholder="e.g. x--- x-x- -x-- xxxx" />
@@ -147,85 +177,63 @@
 
   <div id="preview" class="page section-box" style="display:none;">
     <h2>Preview</h2>
-    <button onclick="previewChords()">Generate in Key</button>
-    <pre id="previewOutput"></pre>
+    <p>(Still under construction — this is where generation will happen!)</p>
   </div>
 
   <script>
-    function showPage(id) {
-      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-      document.getElementById(id).style.display = 'block';
+    document.addEventListener('DOMContentLoaded', () => {
+      const themeToggle = document.getElementById('themeToggle');
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+
+      themeToggle.addEventListener('click', () => {
+        const newTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+      });
+    });
+
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach((page) => (page.style.display = 'none'));
+      document.getElementById(pageId).style.display = 'block';
     }
 
     function toggleCheckboxes(state) {
-      document.querySelectorAll('#chordList input[type="checkbox"]').forEach(cb => cb.checked = state);
+      const checkboxes = document.querySelectorAll('#chordList input[type="checkbox"]');
+      checkboxes.forEach((cb) => (cb.checked = state));
     }
 
     function addCustomProg() {
       const input = document.getElementById('customProg');
       const val = input.value.trim();
-      const validRoman = /^([♭b]?[ivIV]+)(\s*-\s*[♭b]?[ivIV]+)*$/;
 
-      if (!validRoman.test(val)) {
-        alert('Invalid format. Use proper Roman numerals like i - iv - ♭vii');
+      const validRoman = /^([b♭]?[ivIV]+)(\s*-\s*[b♭]?[ivIV]+)*$/;
+
+      if (!validRoman.test(val) || /[iIvV]+/.test(val) && /[a-z][A-Z]|[A-Z][a-z]/.test(val)) {
+        alert('Please use consistent Roman numeral casing (e.g. i - iv - ♭vii - v or I - IV - V). Mixed-case like "Ii" is not valid.');
         return;
       }
 
       const wrapper = document.createElement('label');
       wrapper.className = 'custom-prog-entry';
+
       const cb = document.createElement('input');
       cb.type = 'checkbox';
       cb.checked = true;
       cb.value = val;
+
       const text = document.createTextNode(' ' + val);
       const removeBtn = document.createElement('button');
       removeBtn.innerText = '✖';
       removeBtn.onclick = () => wrapper.remove();
-      wrapper.appendChild(cb); wrapper.appendChild(text); wrapper.appendChild(removeBtn);
+
+      wrapper.appendChild(cb);
+      wrapper.appendChild(text);
+      wrapper.appendChild(removeBtn);
+
       document.getElementById('chordList').appendChild(wrapper);
       input.value = '';
     }
-
-    function previewChords() {
-      const key = document.getElementById('key').value;
-      const mode = document.getElementById('mode').value;
-      const checked = [...document.querySelectorAll('#chordList input:checked')];
-      const progs = checked.map(cb => cb.value);
-      const result = progs.map(p => romanToChord(p, key, mode)).join('\n');
-      document.getElementById('previewOutput').textContent = result;
-    }
-
-    function romanToChord(roman, key, mode) {
-      const steps = [2, 2, 1, 2, 2, 2, 1];
-      const majorScale = [], chromatic = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
-      const flats = { 'C#':'Db','D#':'Eb','F#':'Gb','G#':'Ab','A#':'Bb' };
-      const normalize = n => flats[n] || n;
-      let idx = chromatic.indexOf(key);
-      for (let i = 0, sum = 0; i < 7; i++) {
-        majorScale.push(normalize(chromatic[(idx + sum) % 12]));
-        sum += steps[i];
-      }
-
-      const maps = {
-        major: ['I','ii','iii','IV','V','vi','vii'],
-        minor: ['i','ii','III','iv','v','VI','VII']
-      };
-
-      const degreeMap = {};
-      maps[mode].forEach((r, i) => degreeMap[r.replace('°','')] = majorScale[i]);
-
-      return roman.split('-').map(part => {
-        let chord = part.trim();
-        let flat = chord.startsWith('♭');
-        if (flat) chord = chord.slice(1);
-        let base = degreeMap[chord];
-        if (!base) return part.trim();
-        let idx = chromatic.indexOf(base);
-        let note = normalize(chromatic[(idx + (flat ? -1 : 0) + 12) % 12]);
-        return note;
-      }).join(' - ');
-    }
   </script>
-
 </body>
 </html>
