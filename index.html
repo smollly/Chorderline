@@ -6,84 +6,115 @@
   <title>Chorderline</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f0f0f0;
       color: #000;
       padding: 20px;
-      transition: background-color 0.3s, color 0.3s;
-      position: relative;
+      transition: background-color 0.3s ease, color 0.3s ease;
       min-height: 100vh;
+      position: relative;
     }
     .dark-mode {
-      background-color: #1e1e1e;
-      color: white;
+      background-color: #121212;
+      color: #eee;
     }
     .section-box {
-      background: white;
+      background: #fff;
       border-radius: 8px;
-      padding: 15px;
+      padding: 15px 20px;
       margin-bottom: 20px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      transition: background 0.3s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: background 0.3s ease;
     }
     .dark-mode .section-box {
-      background: #2c2c2c;
+      background: #222;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.8);
     }
-    .navbar, .dark-toggle {
+    .navbar {
       display: flex;
-      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
     }
     .navbar button, .dark-toggle button {
-      margin-right: 10px;
-      padding: 6px 12px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
       background: transparent;
+      border: none;
       font-weight: 600;
-      transition: color 0.3s;
-    }
-    /* Buttons text black in light, white in dark */
-    .navbar button, .dark-toggle button {
+      cursor: pointer;
+      padding: 8px 14px;
+      border-radius: 6px;
+      transition: color 0.3s ease, background-color 0.3s ease;
       color: black;
     }
-    body.dark-mode .navbar button, 
-    body.dark-mode .dark-toggle button {
+    .dark-mode .navbar button,
+    .dark-mode .dark-toggle button {
       color: white;
     }
     .dark-toggle {
-      position: absolute;
+      position: fixed;
       top: 20px;
       right: 20px;
+      z-index: 1000;
+      transition: opacity 0.3s ease;
     }
     #chordList {
+      max-height: 220px;
+      overflow-y: auto;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px 16px;
+      grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+      gap: 8px 15px;
       padding-top: 10px;
     }
-    .custom-prog-entry {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    #chordList label {
+      user-select: none;
     }
-    .custom-prog-entry button {
-      background: transparent;
-      border: none;
-      color: red;
-      cursor: pointer;
+    #customProg {
+      width: 250px;
+      padding: 6px 8px;
+      border-radius: 5px;
+      border: 1px solid #aaa;
+      margin-right: 8px;
       font-size: 1em;
     }
     #generationResult {
+      background: #eee;
+      border-radius: 8px;
+      padding: 15px;
       white-space: pre-wrap;
       font-family: monospace;
-      background: #eee;
-      padding: 10px;
-      border-radius: 6px;
-      margin-top: 10px;
+      font-size: 1.1em;
+      line-height: 1.5;
+      margin-top: 20px;
+      user-select: text;
+      min-height: 160px;
+      box-shadow: inset 0 0 6px #ccc;
+      transition: background 0.3s ease, color 0.3s ease;
     }
-    body.dark-mode #generationResult {
+    .dark-mode #generationResult {
       background: #333;
+      box-shadow: inset 0 0 10px #555;
+      color: #ddd;
+    }
+    label[for="extensionsRange"] {
+      font-weight: 600;
+      margin-top: 20px;
+      display: block;
+    }
+    #extensionsRange {
+      width: 100%;
+      margin-top: 5px;
+      cursor: pointer;
+    }
+    #extensionsValue {
+      font-weight: 700;
+      margin-left: 10px;
+    }
+    /* Show/Hide pages */
+    .page {
+      display: none;
+    }
+    .page.active {
+      display: block;
     }
   </style>
 </head>
@@ -92,10 +123,10 @@
   <h1>🎸 Chorderline</h1>
 
   <div class="dark-toggle">
-    <button onclick="toggleDarkMode()">Toggle Darkmode</button>
+    <button id="darkModeBtn" onclick="toggleDarkMode()">Toggle Darkmode</button>
   </div>
 
-  <nav class="navbar section-box">
+  <nav class="navbar">
     <button onclick="showPage('info')">Info</button>
     <button onclick="showPage('setup')">Setup</button>
     <button onclick="showPage('chord')">Chord</button>
@@ -108,39 +139,32 @@
     <p>This is a random post-punk chord & rhythm generator. Move through each tab to configure your generation. “Setup” handles basic key info, “Chord” handles progressions, and so on. Simple as that.</p>
   </div>
 
-  <div id="setup" class="page section-box" style="display:none;">
+  <div id="setup" class="page section-box">
     <h2>Setup</h2>
     <div style="display: flex; flex-wrap: wrap; gap: 20px;">
       <div>
-        <label for="key">Key:</label>
-        <select id="key">
+        <label for="key">Key:</label><br />
+        <select id="key" aria-label="Select Key">
           <option value="C">C</option>
-          <option value="C#">C#</option>
+          <option value="C#">C# / Db</option>
           <option value="D">D</option>
-          <option value="D#">D#</option>
+          <option value="D#">D# / Eb</option>
           <option value="E">E</option>
           <option value="F">F</option>
-          <option value="F#">F#</option>
+          <option value="F#">F# / Gb</option>
           <option value="G">G</option>
-          <option value="G#">G#</option>
+          <option value="G#">G# / Ab</option>
           <option value="A">A</option>
-          <option value="A#">A#</option>
+          <option value="A#">A# / Bb</option>
           <option value="B">B</option>
         </select>
       </div>
       <div>
-        <label for="mode">Mode:</label>
-        <select id="mode">
-          <option value="major">Major</option>
-          <option value="minor">Minor</option>
-        </select>
-      </div>
-      <div>
-        <label for="tempo">Tempo (BPM):</label>
+        <label for="tempo">Tempo (BPM):</label><br />
         <input type="number" id="tempo" min="40" max="240" value="120" />
       </div>
       <div>
-        <label for="timesig">Time Signature:</label>
+        <label for="timesig">Time Signature:</label><br />
         <select id="timesig">
           <option value="4/4">4/4</option>
           <option value="3/4">3/4</option>
@@ -150,7 +174,7 @@
     </div>
   </div>
 
-  <div id="chord" class="page section-box" style="display:none;">
+  <div id="chord" class="page section-box">
     <h2>Chord Progressions</h2>
     <p>Select one or more progressions. A random one will be chosen for generation. You can also add your own!</p>
     <div style="margin-bottom: 10px;">
@@ -170,227 +194,331 @@
       <label><input type="checkbox" value="i - VI - v - VII" /> i - VI - v - VII</label>
       <label><input type="checkbox" value="I - V - IV - V - vi" /> I - V - IV - V - vi</label>
       <label><input type="checkbox" value="i - VI - iv - VII" /> i - VI - iv - VII</label>
+      <label><input type="checkbox" value="I - vi - iii - IV" /> I - vi - iii - IV</label>
+      <label><input type="checkbox" value="vi - ♭VII - V - I" /> vi - ♭VII - V - I</label>
+      <label><input type="checkbox" value="I - II - IV - V" /> I - II - IV - V</label>
+      <label><input type="checkbox" value="I - IV - vi - IV" /> I - IV - vi - IV</label>
+      <label><input type="checkbox" value="i - III - vi - V" /> i - III - vi - V</label>
+      <label><input type="checkbox" value="VI - III - VII - i" /> VI - III - VII - i</label>
+      <label><input type="checkbox" value="I - V - vi - II" /> I - V - vi - II</label>
+      <label><input type="checkbox" value="vi - I - IV - iii" /> vi - I - IV - iii</label>
+      <label><input type="checkbox" value="I - vi - IV" /> I - vi - IV</label>
     </div>
+
     <div style="margin-top: 15px;">
-      <label for="customProg">Custom progression (optional):</label>
+      <label for="customProg">Custom progression (optional):</label><br />
       <input type="text" id="customProg" placeholder="e.g. i - iv - ♭VII - v" />
       <button onclick="addCustomProg()">✔️</button>
     </div>
+
+    <!-- Extensions & Suspensions slider -->
+    <label for="extensionsRange">
+      Extensions & Suspensions Amount <span id="extensionsValue">50</span>%
+    </label>
+    <input
+      type="range"
+      id="extensionsRange"
+      min="0"
+      max="100"
+      value="50"
+      oninput="document.getElementById('extensionsValue').textContent = this.value"
+    />
   </div>
 
-  <div id="rhythm" class="page section-box" style="display:none;">
+  <div id="rhythm" class="page section-box">
     <h2>Rhythm</h2>
-    <label>Select Pattern:</label>
-    <select id="rhythm">
-      <option value="stabs">Staccato Stabs</option>
-      <option value="drone">Droning Strums</option>
-      <option value="16ths">16th Note Machine</option>
-      <option value="jerky">Jerky Offbeat</option>
-    </select>
+    <p>Rhythm settings coming soon...</p>
   </div>
 
-  <div id="preview" class="page section-box" style="display:none;">
-    <h2>Preview</h2>
-    <button onclick="generate()">Generate</button>
-    <pre id="generationResult">Hit generate to see your random chord progression!</pre>
+  <div id="preview" class="page section-box">
+    <h2>Preview & Generate</h2>
+    <button onclick="generateChordProgression()" style="margin-bottom:10px;">Generate!</button>
+    <div id="generationResult">Hit Generate to see the magic ✨</div>
   </div>
 
-  <script>
-    // Notes chromatic scale, sharps & flats normalized
-    const chromaticNotes = [
-      "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
-    ];
-    // Helper to get note index with flats (# and ♭ normalized)
-    function normalizeNote(note) {
-      if (note.includes("♭")) {
-        // Flat: find note one semitone down
-        let base = note.replace("♭", "");
-        let idx = chromaticNotes.indexOf(base);
-        if (idx === -1) return note; // fallback
-        let flatIdx = (idx + 11) % 12; // one semitone down, wrap around
-        return chromaticNotes[flatIdx];
-      } else if (note.includes("#")) {
-        // Sharp: direct
-        return note.replace("♯", "#");
-      }
-      return note;
+<script>
+  // Global State
+  let customProgressions = [];
+
+  // Show the selected page, hide others
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => {
+      p.classList.remove('active');
+      p.style.display = 'none';
+    });
+    const page = document.getElementById(pageId);
+    page.style.display = 'block';
+    page.classList.add('active');
+  }
+
+  // Dark mode toggle with fade effect
+  function toggleDarkMode() {
+    const body = document.body;
+    if(body.classList.contains('dark-mode')) {
+      body.classList.remove('dark-mode');
+    } else {
+      body.classList.add('dark-mode');
+    }
+  }
+
+  // Apply or disable all chord checkboxes
+  function toggleCheckboxes(state) {
+    document.querySelectorAll('#chordList input[type=checkbox]').forEach(chk => {
+      chk.checked = state;
+    });
+  }
+
+  // Add custom progression from input box
+  function addCustomProg() {
+    const input = document.getElementById('customProg');
+    const val = input.value.trim();
+    if(val === '') {
+      alert('Please enter a valid progression!');
+      return;
+    }
+    // Validate input - must have Roman numeral-like pattern separated by "-"
+    if(!/^([iIvV]+|♭?[IViv]+)(\s*-\s*([iIvV]+|♭?[IViv]+))*$/.test(val)) {
+      alert('Please enter valid roman numeral progression, e.g. "i - iv - ♭VII - v"');
+      return;
+    }
+    customProgressions.push(val);
+    // Add to checkbox list dynamically
+    const chordList = document.getElementById('chordList');
+    const label = document.createElement('label');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.value = val;
+    checkbox.checked = true;
+    label.appendChild(checkbox);
+    label.append(' ' + val);
+    chordList.appendChild(label);
+    input.value = '';
+  }
+
+  // -----------------
+  // MUSIC THEORY HELPERS
+  // -----------------
+
+  // Chromatic scale for reference, sharps only (flats handled later)
+  const CHROMATIC_SHARPS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  // Flats equivalent map for keys (to convert flats to sharps)
+  const FLAT_TO_SHARP = {
+    'Db': 'C#', 'Eb': 'D#', 'Gb': 'F#', 'Ab': 'G#', 'Bb': 'A#', 'Cb': 'B', 'Fb': 'E'
+  };
+
+  // Map roman numeral to scale degree (1-based)
+  // Handles ♭ (flat) for lowered scale degrees like ♭VII
+  function romanToDegree(rn) {
+    rn = rn.trim();
+    // Remove any whitespace
+    // Detect if there's a flat symbol (♭)
+    let flat = false;
+    if(rn.startsWith('♭')) {
+      flat = true;
+      rn = rn.slice(1);
+    }
+    // Convert roman numeral to integer 1-7 (basic ones only)
+    // I=1, II=2, III=3, IV=4, V=5, VI=6, VII=7
+    const romanMap = {I:1, II:2, III:3, IV:4, V:5, VI:6, VII:7};
+    // Normalize uppercase for checking:
+    const upperRn = rn.toUpperCase();
+
+    let degree = romanMap[upperRn] || null;
+    if(degree === null) return null; // unknown numeral
+
+    if(flat) {
+      degree = degree - 1;
+      if(degree < 1) degree = 7; // wrap around to 7
+    }
+    return degree;
+  }
+
+  // Parse a chord numeral to extract info
+  // Returns an object { degree, isMinor, isMajor, isDiminished, isAugmented, raw }
+  // We'll decide minor/major based on case (lowercase minor, uppercase major)
+  // and common chords (diminished often with ° but ignored here)
+  function parseChordNumeral(numeral) {
+    numeral = numeral.trim();
+    let raw = numeral;
+
+    // Detect flat ♭ and remove for now
+    let hasFlat = false;
+    if(numeral.startsWith('♭')) {
+      hasFlat = true;
+      numeral = numeral.slice(1);
     }
 
-    // Major scale intervals (semitones)
-    const majorIntervals = [0, 2, 4, 5, 7, 9, 11];
-    // Minor natural scale intervals
-    const minorIntervals = [0, 2, 3, 5, 7, 8, 10];
+    // Determine minor or major by case of first letter (i is minor, I is major)
+    let isMinor = /^[iv]+$/.test(numeral);
+    let isMajor = !isMinor;
 
-    // Build scale notes based on key and mode
-    function buildScale(key, mode) {
-      let rootIndex = chromaticNotes.indexOf(normalizeNote(key));
-      let intervals = mode === "major" ? majorIntervals : minorIntervals;
-      return intervals.map(i => chromaticNotes[(rootIndex + i) % 12]);
-    }
+    // Also detect diminished or augmented (optional, ignored here for simplicity)
 
-    // Map Roman numerals to scale degree (1-based)
-    const romanToDegree = {
-      "I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7,
-      "i": 1, "ii": 2, "iii": 3, "iv": 4, "v": 5, "vi": 6, "vii": 7,
-      "ii°": 2, "vii°": 7, "i°": 1 // diminished chords
+    // Remove any other characters like sus, add7 etc - will add later
+    // We'll parse extensions/sus later in chord extensions logic
+
+    return {
+      raw,
+      numeral,
+      hasFlat,
+      isMinor,
+      isMajor,
+      degree: romanToDegree(raw)
     };
+  }
 
-    // Detect diminished chord suffix (°)
-    function isDiminished(roman) {
-      return roman.includes("°") || roman.includes("dim");
+  // Build major scale for a given root note (sharp name) - returns array of notes
+  function buildMajorScale(root) {
+    // Major scale intervals in semitones: W-W-H-W-W-W-H => 2-2-1-2-2-2-1
+    const intervals = [2,2,1,2,2,2,1];
+    let scale = [root];
+    let rootIdx = CHROMATIC_SHARPS.indexOf(root);
+    if(rootIdx === -1) {
+      // try convert flats to sharps
+      root = FLAT_TO_SHARP[root] || root;
+      rootIdx = CHROMATIC_SHARPS.indexOf(root);
+      if(rootIdx === -1) return [];
     }
-
-    // Determine chord quality from roman numeral:
-    // uppercase = major, lowercase = minor, ° = diminished
-    function getChordQuality(roman) {
-      if (isDiminished(roman)) return "dim";
-      if (roman.toUpperCase() === roman) return "maj";
-      return "min";
+    let currentIdx = rootIdx;
+    for(let i=0; i<intervals.length-1; i++) {
+      currentIdx = (currentIdx + intervals[i]) % 12;
+      scale.push(CHROMATIC_SHARPS[currentIdx]);
     }
+    return scale;
+  }
 
-    // Apply flats/sharps to roman numeral root (e.g., ♭VII → flat the 7th degree)
-    function parseRomanNumeral(rn) {
-      // Handle flat/sharp prefixes, e.g. ♭VII, ♯iv, etc
-      let accidental = null;
-      let base = rn;
-      if (rn.startsWith("♭")) {
-        accidental = -1;
-        base = rn.slice(1);
-      } else if (rn.startsWith("♯") || rn.startsWith("#")) {
-        accidental = 1;
-        base = rn.slice(1);
-      }
-      // Diminished chord sometimes written as ii° or vii°
-      const quality = getChordQuality(rn);
-      // Clean base numeral (remove °)
-      let baseClean = base.replace("°", "");
-
-      // Map numeral to scale degree 1-7
-      let degree = romanToDegree[baseClean];
-      if (!degree) {
-        console.warn("Unknown roman numeral: ", rn);
-        return null;
-      }
-
-      return { accidental, degree, quality };
+  // Build minor scale (natural minor) for given root note
+  function buildMinorScale(root) {
+    // Natural minor intervals: W-H-W-W-H-W-W => 2-1-2-2-1-2-2
+    const intervals = [2,1,2,2,1,2,2];
+    let scale = [root];
+    let rootIdx = CHROMATIC_SHARPS.indexOf(root);
+    if(rootIdx === -1) {
+      root = FLAT_TO_SHARP[root] || root;
+      rootIdx = CHROMATIC_SHARPS.indexOf(root);
+      if(rootIdx === -1) return [];
     }
-
-    // Calculate chord root note based on degree and scale
-    // Applies accidental to degree (e.g. flat VII = degree 7 lowered by 1 semitone)
-    function getChordRootNote(scale, accidental, degree) {
-      let note = scale[degree - 1];
-      if (accidental) {
-        // Get chromatic note index and shift by accidental
-        let idx = chromaticNotes.indexOf(note);
-        let newIdx = (idx + accidental + 12) % 12;
-        note = chromaticNotes[newIdx];
-      }
-      return note;
+    let currentIdx = rootIdx;
+    for(let i=0; i<intervals.length-1; i++) {
+      currentIdx = (currentIdx + intervals[i]) % 12;
+      scale.push(CHROMATIC_SHARPS[currentIdx]);
     }
+    return scale;
+  }
 
-    // Compose chord name with quality suffix (min or dim)
-    // Major chords just show the note name
-    function buildChordName(root, quality) {
-      if (quality === "maj") return root;
-      if (quality === "min") return root + "m";
-      if (quality === "dim") return root + "dim";
-      return root; // fallback
+  // Determine chord quality based on scale type and degree for major key
+  // Returns chord name root + chord quality (maj, min, dim)
+  function getChordForDegree(degree, isMinorKey = false) {
+    if(isMinorKey) {
+      // Natural minor triads (i ii° III iv v VI VII)
+      // degree 1:i min, 2:dim, 3:maj, 4:min, 5:min, 6:maj, 7:maj
+      const qualities = ['min', 'dim', 'maj', 'min', 'min', 'maj', 'maj'];
+      return qualities[degree - 1];
+    } else {
+      // Major key triads (I ii iii IV V vi vii°)
+      // degree 1:maj, 2:min, 3:min, 4:maj, 5:maj, 6:min, 7:dim
+      const qualities = ['maj', 'min', 'min', 'maj', 'maj', 'min', 'dim'];
+      return qualities[degree - 1];
     }
+  }
 
-    // Turn roman numeral progression string into array of chord objects
-    function parseProgression(progStr) {
-      return progStr.split("-").map(s => s.trim()).filter(s => s.length > 0);
-    }
+  // Add extensions and suspensions based on slider value and randomness
+  function applyExtensions(chordName, extensionPercent) {
+    // extensionPercent is 0-100, chance to add extensions
+    // We'll randomly add 7, sus2, sus4, add9 chords
 
-    // Generate chord names from progression
-    function generateChordsFromProg(progArr, key, mode) {
-      const scale = buildScale(key, mode);
-      let chords = [];
+    const chance = extensionPercent / 100;
+    const rand = Math.random();
 
-      for (let rn of progArr) {
-        let parsed = parseRomanNumeral(rn);
-        if (!parsed) {
-          chords.push("???");
-          continue;
-        }
-        let root = getChordRootNote(scale, parsed.accidental, parsed.degree);
-        let chordName = buildChordName(root, parsed.quality);
-        chords.push(chordName);
-      }
-      return chords;
-    }
+    if(rand > chance) return chordName; // no extension
 
-    // Pages nav
-    function showPage(id) {
-      document.querySelectorAll(".page").forEach(p => p.style.display = "none");
-      const page = document.getElementById(id);
-      if (page) page.style.display = "block";
-    }
+    // Possible extensions to add
+    const extList = ['7', 'sus2', 'sus4', 'add9'];
+    const chosen = extList[Math.floor(Math.random() * extList.length)];
 
-    // Toggle all checkboxes in chord list
-    function toggleCheckboxes(value) {
-      document.querySelectorAll("#chordList input[type=checkbox]").forEach(cb => cb.checked = value);
-    }
+    // Don't double-up extensions, just append
+    if(chordName.includes(chosen)) return chordName;
 
-    // Add custom progression to chord list
-    function addCustomProg() {
-      const input = document.getElementById("customProg");
-      const val = input.value.trim();
-      if (!val) return;
+    // Append extension nicely
+    return chordName + chosen;
+  }
 
-      // Make sure it's not a duplicate
-      const existingLabels = Array.from(document.querySelectorAll("#chordList label"));
-      if (existingLabels.some(l => l.textContent.trim() === val)) {
-        alert("That progression already exists!");
+  // Convert roman numeral progression string to actual chords in the key
+  function convertProgression(progStr, keyRoot, isMinorKey = false, extensionPercent = 50) {
+    const scale = isMinorKey ? buildMinorScale(keyRoot) : buildMajorScale(keyRoot);
+    if(scale.length === 0) return 'Invalid key';
+
+    const chords = [];
+
+    // Split progression into tokens, like "i - iv - ♭VII - v"
+    const tokens = progStr.split('-').map(t => t.trim()).filter(t => t.length > 0);
+
+    tokens.forEach(token => {
+      const parsed = parseChordNumeral(token);
+      if(!parsed || parsed.degree === null) {
+        chords.push('???');
         return;
       }
 
-      const container = document.getElementById("chordList");
-      const newLabel = document.createElement("label");
-      newLabel.innerHTML = `<input type="checkbox" checked value="${val}" /> ${val} <button onclick="this.parentElement.remove()">✖</button>`;
-      container.appendChild(newLabel);
-      input.value = "";
+      let degree = parsed.degree;
+      // Fix flats if needed (♭VII becomes degree 6, etc handled in romanToDegree)
+      // degree is 1-based scale degree
+
+      // Note root from scale (wrap around for ♭VII or others)
+      let rootNote = scale[(degree - 1) % scale.length];
+
+      // Determine chord quality
+      let quality = getChordForDegree(degree, isMinorKey);
+
+      // Format chord name
+      let chordName = rootNote;
+
+      if(quality === 'min') chordName += 'm';
+      else if(quality === 'dim') chordName += 'dim';
+
+      // Apply extensions/sus based on slider
+      chordName = applyExtensions(chordName, extensionPercent);
+
+      chords.push(chordName);
+    });
+
+    return chords.join(' - ');
+  }
+
+  // Main generation function
+  function generateChordProgression() {
+    const key = document.getElementById('key').value;
+    const tempo = document.getElementById('tempo').value;
+    const timesig = document.getElementById('timesig').value;
+
+    // Determine if key is minor (rudimentary check)
+    // For now, assume minor if key name ends with 'm' or user sets in future (todo)
+    const isMinorKey = false;
+
+    // Gather checked progressions from checkbox list + custom
+    const checkedBoxes = [...document.querySelectorAll('#chordList input[type=checkbox]:checked')];
+    if(checkedBoxes.length === 0) {
+      alert('Please select at least one progression!');
+      return;
     }
 
-    // Toggle dark mode
-    function toggleDarkMode() {
-      document.body.classList.toggle("dark-mode");
-    }
+    const selectedProgs = checkedBoxes.map(cb => cb.value);
+    // Pick one randomly
+    const selectedProg = selectedProgs[Math.floor(Math.random() * selectedProgs.length)];
 
-    // Generate function for preview tab
-    function generate() {
-      // Get key, mode, tempo, time signature
-      const key = document.getElementById("key").value;
-      const mode = document.getElementById("mode").value;
-      const tempo = document.getElementById("tempo").value;
-      const timeSig = document.getElementById("timesig").value;
+    const extensionPercent = parseInt(document.getElementById('extensionsRange').value);
 
-      // Get all checked progressions from chord list
-      const checkedProgs = Array.from(document.querySelectorAll("#chordList input[type=checkbox]:checked")).map(cb => cb.value);
-      if (checkedProgs.length === 0) {
-        alert("Please select at least one chord progression.");
-        return;
-      }
+    // Convert to actual chords
+    const chordString = convertProgression(selectedProg, key, isMinorKey, extensionPercent);
 
-      // Pick random progression from checked
-      const chosenProg = checkedProgs[Math.floor(Math.random() * checkedProgs.length)];
-      const progArr = parseProgression(chosenProg);
+    // Prepare output
+    let output = `Key: ${key}\nTempo: ${tempo} BPM\nTime Signature: ${timesig}\n\nProgression: ${selectedProg}\nGenerated Chords:\n${chordString}`;
 
-      // Generate chords
-      const chords = generateChordsFromProg(progArr, key, mode);
+    // Show output in preview panel
+    const preview = document.getElementById('generationResult');
+    preview.textContent = output;
+  }
+</script>
 
-      // Format output nicely
-      let output = "";
-      output += `Key: ${key} ${mode.charAt(0).toUpperCase() + mode.slice(1)}\n`;
-      output += `Progression (Roman numerals): ${chosenProg}\n`;
-      output += `Applied Chords: ${chords.join(" - ")}\n`;
-      output += `Tempo: ${tempo} BPM\n`;
-      output += `Time Signature: ${timeSig}\n`;
-
-      document.getElementById("generationResult").textContent = output;
-      showPage("preview");
-    }
-
-  </script>
 </body>
 </html>
