@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Chorderline</title>
   <style>
-    /* --- Base styles --- */
     body {
       background-color: #f0f0f0;
       color: #000;
@@ -22,7 +21,7 @@
       border-radius: 8px;
       padding: 15px;
       margin-bottom: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       transition: background-color 0.5s, color 0.5s;
     }
     .darkmode .section-box {
@@ -43,6 +42,7 @@
       padding: 6px 12px;
       font-weight: bold;
       cursor: pointer;
+      color: inherit;
       transition: background-color 0.3s;
     }
     nav.navbar button:hover {
@@ -51,40 +51,42 @@
     .darkmode nav.navbar button:hover {
       background-color: #333;
     }
-    .toggle-darkmode {
-      margin-left: auto;
-    }
-    /* --- Chord list grid --- */
     #chordList {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px 16px;
       padding-top: 10px;
     }
-    #chordList label {
+    .custom-prog-entry {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 8px;
     }
-    #chordList label button {
+    .custom-prog-entry button {
       background: transparent;
       border: none;
       color: red;
       cursor: pointer;
       font-size: 1em;
     }
-    /* --- Inputs & labels --- */
-    input[type="text"], select, input[type="number"], input[type="range"] {
+    .toggle-darkmode {
+      margin-left: auto;
+      font-weight: bold;
+    }
+    input[type="text"], select, input[type="number"] {
       border-radius: 4px;
       border: 1px solid #ccc;
       padding: 5px;
       font-size: 1em;
       margin-left: 8px;
     }
+    input[type="number"] {
+      width: 80px;
+    }
     label {
       font-weight: 600;
     }
-    /* --- Rhythm grid --- */
+    /* Rhythm grid styling */
     #rhythmGrid {
       display: grid;
       grid-template-columns: repeat(8, 40px);
@@ -97,18 +99,18 @@
       height: 40px;
       border: 2px solid #888;
       border-radius: 6px;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: bold;
       font-size: 1.2em;
-      cursor: pointer;
       transition: background-color 0.3s, border-color 0.3s;
     }
     .beat-box.active {
       background-color: #4caf50;
       border-color: #388e3c;
-      color: #fff;
+      color: white;
     }
     .darkmode .beat-box {
       border-color: #aaa;
@@ -136,18 +138,27 @@
   <!-- Pages -->
   <div id="info" class="page section-box active">
     <h2>Welcome to Chorderline</h2>
-    <p>Random post-punk chord & rhythm generator. “Setup” → basic key/tempo/timesig, “Chord” → progressions, “Rhythm” → beats pattern, “Preview” → hear it.</p>
+    <p>This is a random post-punk chord & rhythm generator. Move through each tab to configure your generation. “Setup” handles basic key info, “Chord” handles progressions, and so on. Simple as that.</p>
   </div>
 
   <div id="setup" class="page section-box" style="display:none;">
     <h2>Setup</h2>
-    <div style="display:flex; flex-wrap:wrap; gap:20px;">
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
       <div>
         <label for="key">Key:</label>
         <select id="key">
-          <option>C</option><option>C# / Db</option><option>D</option><option>D# / Eb</option>
-          <option>E</option><option>F</option><option>F# / Gb</option><option>G</option>
-          <option>G# / Ab</option><option>A</option><option>A# / Bb</option><option>B</option>
+          <option value="C">C</option>
+          <option value="C#">C# / Db</option>
+          <option value="D">D</option>
+          <option value="D#">D# / Eb</option>
+          <option value="E">E</option>
+          <option value="F">F</option>
+          <option value="F#">F# / Gb</option>
+          <option value="G">G</option>
+          <option value="G#">G# / Ab</option>
+          <option value="A">A</option>
+          <option value="A#">A# / Bb</option>
+          <option value="B">B</option>
         </select>
       </div>
       <div>
@@ -155,9 +166,12 @@
         <input type="number" id="tempo" min="40" max="240" value="120" />
       </div>
       <div>
-        <label for="timesig">Time Sig:</label>
+        <label for="timesig">Time Signature:</label>
         <select id="timesig">
-          <option>4/4</option><option>3/4</option><option>6/8</option><option>7/8</option>
+          <option value="4/4">4/4</option>
+          <option value="3/4">3/4</option>
+          <option value="6/8">6/8</option>
+          <option value="7/8">7/8</option>
         </select>
       </div>
     </div>
@@ -165,153 +179,168 @@
 
   <div id="chord" class="page section-box" style="display:none;">
     <h2>Chord Progressions</h2>
-    <p>Pick some presets or add your own. Must be uppercase I–VII, ≥2 chords, dash-separated.</p>
-    <div style="margin-bottom:10px;">
+    <p>
+      Select one or more progressions below. Chorderline will pick one at random when generating.
+      These are written using Roman numerals for flexibility across keys and modes.
+      You can also enter your own progression if you don’t see one you like.
+    </p>
+    <div style="margin-bottom: 10px;">
       <button onclick="toggleCheckboxes(true)">Apply All</button>
       <button onclick="toggleCheckboxes(false)">Disable All</button>
     </div>
     <div id="chordList">
-      <label><input type="checkbox" value="I-V-IV"> I-V-IV</label>
-      <label><input type="checkbox" value="I-V-vi-IV"> I-V-vi-IV</label>
-      <label><input type="checkbox" value="V-vi-IV"> V-vi-IV</label>
-      <label><input type="checkbox" value="i-VII-III-V"> i-VII-III-V</label>
-      <!-- …other defaults… -->
+      <label><input type="checkbox" value="I - V - IV" /> I - V - IV</label>
+      <label><input type="checkbox" value="I - V - vi - IV" /> I - V - vi - IV</label>
+      <label><input type="checkbox" value="V - vi - IV" /> V - vi - IV</label>
+      <label><input type="checkbox" value="i - VI - III - V" /> i - VI - III - V</label>
+      <label><input type="checkbox" value="I - V - vi - IV - ii - V" /> I - V - vi - IV - ii - V</label>
+      <label><input type="checkbox" value="I - V - vi - IV - I" /> I - V - vi - IV - I</label>
+      <label><input type="checkbox" value="I - iii - ii - V" /> I - iii - ii - V</label>
+      <label><input type="checkbox" value="i - VII - III - v" /> i - VII - III - v</label>
+      <label><input type="checkbox" value="vi - I - V - IV" /> vi - I - V - IV</label>
+      <label><input type="checkbox" value="i - VI - v - VII" /> i - VI - v - VII</label>
+      <label><input type="checkbox" value="I - V - IV - V - vi" /> I - V - IV - V - vi</label>
+      <label><input type="checkbox" value="i - VI - iv - VII" /> i - VI - iv - VII</label>
+      <label><input type="checkbox" value="I - vi - iii - IV" /> I - vi - iii - IV</label>
+      <label><input type="checkbox" value="vi - ♭VII - V - I" /> vi - ♭VII - V - I</label>
+      <label><input type="checkbox" value="I - II - IV - V" /> I - II - IV - V</label>
+      <label><input type="checkbox" value="I - IV - vi - IV" /> I - IV - vi - IV</label>
+      <label><input type="checkbox" value="i - III - vi - V" /> i - III - vi - V</label>
+      <label><input type="checkbox" value="VI - III - VII - i" /> VI - III - VII - i</label>
+      <label><input type="checkbox" value="I - V - vi - II" /> I - V - vi - II</label>
+      <label><input type="checkbox" value="vi - I - IV - iii" /> vi - I - IV - iii</label>
+      <label><input type="checkbox" value="I - vi - IV" /> I - vi - IV</label>
     </div>
-    <div style="margin-top:15px;">
-      <input type="text" id="customProg" placeholder="e.g. I-bVII-iiadd9" />
+    <div style="margin-top: 15px;">
+      <input type="text" id="customProg" placeholder="Add your own progression e.g. i - iv - v" style="width: 60%" />
       <button onclick="addCustomProg()">Add</button>
+      <p style="font-size: 0.9em; color: #666; margin-top: 8px;">
+        <strong>Note:</strong> Use only <em>all uppercase</em> (major) or <em>all lowercase</em> (minor) Roman numerals per chord, with optional flats (♭ or b) and extensions. Mixing upper and lower in the same chord (e.g., vI) is not allowed.
+      </p>
     </div>
-    <h3>Extensions & Suspensions</h3>
-    <label for="extensionsSlider">Amount:</label>
-    <input type="range" id="extensionsSlider" min="0" max="10" value="3" />
   </div>
 
   <div id="rhythm" class="page section-box" style="display:none;">
-    <h2>Rhythm Generator</h2>
-    <p>Toggle beats; then press Generate.</p>
-    <label for="rhythmBeatsCount">Beats per measure (1–16):</label>
-    <input type="number" id="rhythmBeatsCount" min="1" max="16" value="8" onchange="createRhythmGrid()" />
+    <h2>Rhythm</h2>
+    <p>Click the beats below to toggle where chords will play.</p>
     <div id="rhythmGrid"></div>
-    <button onclick="generateRhythm()">Generate Rhythm</button>
-    <h3>Generated Pattern:</h3>
-    <p id="rhythmOutput" style="font-family:monospace; font-size:1.2em;"></p>
   </div>
 
   <div id="preview" class="page section-box" style="display:none;">
     <h2>Preview</h2>
-    <p>Key: <span id="previewKey"></span></p>
-    <p>Tempo: <span id="previewTempo"></span> BPM</p>
-    <p>Time Sig: <span id="previewTimesig"></span></p>
-    <p>Chord Prog: <span id="previewProg"></span></p>
-    <p>Rhythm: <span id="previewRhythm"></span></p>
+    <button onclick="generateChordProg()">Generate Progression</button>
+    <p id="previewResult" style="font-size: 1.3em; margin-top: 20px;"></p>
   </div>
 
   <script>
-    // === Nav & Darkmode ===
+    // Page show/hide logic
     function showPage(id) {
-      document.querySelectorAll('.page').forEach(p => p.style.display = p.id === id ? 'block' : 'none');
+      document.querySelectorAll('.page').forEach(p => {
+        p.style.display = (p.id === id) ? 'block' : 'none';
+      });
     }
+
+    // Darkmode toggle
     function toggleDarkMode() {
       document.body.classList.toggle('darkmode');
     }
 
-    // === Checkboxes batch ===
+    // Apply or Disable all chord checkboxes
     function toggleCheckboxes(state) {
-      document.querySelectorAll('#chordList input[type=checkbox]')
-        .forEach(cb => cb.checked = state);
+      document.querySelectorAll('#chordList input[type="checkbox"]').forEach(cb => {
+        cb.checked = state;
+      });
     }
 
-    // === Roman-numeral validation up to VII ===
+    // Add custom progression to list if valid
+    function addCustomProg() {
+      const input = document.getElementById('customProg');
+      const prog = input.value.trim();
+      if (!prog) return alert("You gotta type something first!");
+
+      if (!validateRomanNumeralProg(prog)) {
+        return alert("Invalid chord progression! Remember: chords must be all uppercase or all lowercase Roman numerals per chord (no mixing), optional flats (♭ or b), and optional extensions. Separate chords with '-' or '–' or '—'.");
+      }
+
+      // Check if already exists
+      const existing = [...document.querySelectorAll('#chordList input[type="checkbox"]')]
+        .some(cb => cb.value.toLowerCase() === prog.toLowerCase());
+      if (existing) {
+        return alert("That progression's already here!");
+      }
+
+      // Create new checkbox
+      const label = document.createElement('label');
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = prog;
+      cb.checked = true;
+
+      // Add a remove button for the custom progression
+      const removeBtn = document.createElement('button');
+      removeBtn.textContent = "✖";
+      removeBtn.title = "Remove this progression";
+      removeBtn.onclick = (e) => {
+        e.preventDefault();
+        label.remove();
+      };
+
+      label.appendChild(cb);
+      label.appendChild(document.createTextNode(" " + prog + " "));
+      label.appendChild(removeBtn);
+
+      document.getElementById('chordList').appendChild(label);
+      input.value = '';
+    }
+
+    // Validate Roman numeral progression
+    // Must have at least 2 chords separated by dash (-) or dash variants
+    // Each chord must be all uppercase OR all lowercase Roman numerals, optional flat (♭ or b), optional extensions (e.g. 7, sus2, add9)
+    // No mixing of uppercase and lowercase letters in the same chord allowed
     function validateRomanNumeralProg(prog) {
-      if (!prog || !prog.includes('-')) return false;
-      // Must have no spaces around dashes and only ASCII dash
-      if (/\s-\s|\u2013|\u2014/.test(prog)) return false;
-      const chords = prog.split('-');
+      if (!prog || !prog.trim()) return false;
+      let chords = prog.split(/\s*[-–—]\s*/);
       if (chords.length < 2) return false;
 
-      const validNumerals = ['I','II','III','IV','V','VI','VII'];
+      // Regex:
+      // ^ start and $ end anchors for full chord match
+      // ([IV]+|[iv]+) = either all uppercase Roman numerals or all lowercase Roman numerals
+      // (♭|b)? optional flat symbol after numerals
+      // (\(?((sus|add)?[0-9]+)?\)?)? optional extensions like (sus2), add9, 7, etc, with or without parentheses
+      const chordRegex = /^([IV]+|[iv]+)(♭|b)?(\(?((sus|add)?[0-9]+)?\)?)?$/;
 
-      for (let raw of chords) {
-        const ch = raw.trim();
-        // Extract prefix/suffix flat/sharp
-        let core = ch.replace(/^[b♭#♯]|[b♭#♯]$/g, '');
-        // Split core into numeral + extension
-        let match = core.match(/^([IVX]+)(.*)$/);
-        if (!match) return false;
-        const [_, rn, ext] = match;
-        if (!validNumerals.includes(rn)) return false;
-        // Validate ext: allow sus, add, maj, dim, aug + nums, parentheses
-        if (ext && !/^(\(?((sus|add|maj|dim|aug)?\d*)\)*)*$/i.test(ext)) return false;
+      for (let ch of chords) {
+        ch = ch.trim();
+        if (!chordRegex.test(ch)) return false;
       }
       return true;
     }
 
-    // === Add custom progression ===
-    function addCustomProg() {
-      const inp = document.getElementById('customProg');
-      const val = inp.value.trim();
-      if (!validateRomanNumeralProg(val)) {
-        alert('Invalid! Use ≥2 chords, dash-separated, uppercase I–VII, optional b/♭/#/♯ & sus/add/extensions. No spaces around dashes!');
-        return;
-      }
-      // Check duplicates
-      const exists = Array.from(document.querySelectorAll('#chordList input'))
-        .some(cb => cb.value === val);
-      if (exists) {
-        alert('That progression already exists!');
-        inp.value = '';
-        return;
-      }
-      const label = document.createElement('label');
-      const cb    = document.createElement('input');
-      cb.type = 'checkbox'; cb.value = val; cb.checked = true;
-      const remove = document.createElement('button');
-      remove.textContent = '×';
-      remove.onclick = e => { e.preventDefault(); label.remove(); };
-      label.append(cb, document.createTextNode(' ' + val + ' '), remove);
-      document.getElementById('chordList').append(label);
-      inp.value = '';
+    // Generate chord progression from checked checkboxes
+    function generateChordProg() {
+      const checked = [...document.querySelectorAll('#chordList input[type="checkbox"]:checked')];
+      if (!checked.length) return alert("Pick at least one progression first!");
+
+      // Pick random progression
+      const prog = checked[Math.floor(Math.random() * checked.length)].value;
+      document.getElementById('previewResult').textContent = prog;
     }
 
-    // === Rhythm grid ===
-    function createRhythmGrid() {
-      const grid = document.getElementById('rhythmGrid');
-      grid.innerHTML = '';
-      const count = Math.min(Math.max(+document.getElementById('rhythmBeatsCount').value,1),16);
-      for (let i=1; i<=count; i++) {
-        const box = document.createElement('div');
-        box.className = 'beat-box';
-        box.textContent = i;
-        box.onclick = () => box.classList.toggle('active');
-        grid.append(box);
-      }
-    }
-    createRhythmGrid();
+    // Rhythm grid toggling
+    const rhythmGrid = document.getElementById('rhythmGrid');
+    const beatsCount = 8;
+    let beatStates = Array(beatsCount).fill(false);
 
-    function generateRhythm() {
-      const boxes = [...document.querySelectorAll('.beat-box')];
-      if (!boxes.length) return alert('Set beats per measure!');
-      const pattern = boxes.map(b => b.classList.contains('active') ? 'x' : '-').join('');
-      document.getElementById('rhythmOutput').textContent = pattern;
-      document.getElementById('previewRhythm').textContent = pattern;
+    for (let i = 0; i < beatsCount; i++) {
+      let box = document.createElement('div');
+      box.className = 'beat-box';
+      box.textContent = i + 1;
+      box.onclick = () => {
+        beatStates[i] = !beatStates[i];
+        box.classList.toggle('active');
+      };
+      rhythmGrid.appendChild(box);
     }
-
-    // === Preview updates ===
-    function updatePreview() {
-      document.getElementById('previewKey').textContent = document.getElementById('key').value;
-      document.getElementById('previewTempo').textContent = document.getElementById('tempo').value;
-      document.getElementById('previewTimesig').textContent = document.getElementById('timesig').value;
-      const sel = [...document.querySelectorAll('#chordList input:checked')].map(cb=>cb.value);
-      document.getElementById('previewProg').textContent = sel.length
-        ? sel[Math.floor(Math.random()*sel.length)]
-        : 'No chord progression selected';
-    }
-    document.querySelectorAll('#key,#tempo,#timesig').forEach(el => el.onchange = updatePreview);
-    document.getElementById('chordList').onchange = updatePreview;
-    document.querySelector('nav.navbar button[onclick*="preview"]').onclick = () => {
-      updatePreview(); showPage('preview');
-    };
   </script>
-
 </body>
 </html>
