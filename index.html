@@ -77,6 +77,24 @@
       user-select: none;
     }
 
+    /* ======= PREVIEW BUTTON GLOW UP ======= */
+    button.fancy-button {
+      background-color: #6200ea;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-weight: bold;
+      font-size: 1.1em;
+      cursor: pointer;
+      box-shadow: 0 0 10px #6200ea;
+      transition: box-shadow 0.3s ease-in-out, transform 0.15s ease;
+    }
+    button.fancy-button:hover {
+      box-shadow: 0 0 20px #9a4dff, 0 0 30px #bb7fff;
+      transform: scale(1.05);
+    }
+
     .toggle-darkmode {
       margin-left: auto;
       font-weight: bold;
@@ -214,9 +232,33 @@
     </div>
 
     <div id="chordList">
-      <!-- your original checkboxes here -->
+      <!-- YOUR FULL HARDCODED PROGRESIONS BACK IN -->
       <label><input type="checkbox" value="I - V - IV" /> I - V - IV</label>
-      <!-- … etc … -->
+      <label><input type="checkbox" value="I - V - vi - IV" /> I - V - vi - IV</label>
+      <label><input type="checkbox" value="V - vi - IV" /> V - vi - IV</label>
+      <label><input type="checkbox" value="i - VI - III - V" /> i - VI - III - V</label>
+      <label><input type="checkbox" value="I - V - vi - IV - ii - V" /> I - V - vi - IV - ii - V</label>
+      <label><input type="checkbox" value="I - V - vi - IV - I" /> I - V - vi - IV - I</label>
+      <label><input type="checkbox" value="I - iii - ii - V" /> I - iii - ii - V</label>
+      <label><input type="checkbox" value="i - VII - III - v" /> i - VII - III - v</label>
+      <label><input type="checkbox" value="vi - I - V - IV" /> vi - I - V - IV</label>
+      <label><input type="checkbox" value="i - VI - v - VII" /> i - VI - v - VII</label>
+      <label><input type="checkbox" value="I - V - IV - V - vi" /> I - V - IV - V - vi</label>
+      <label><input type="checkbox" value="i - VI - iv - VII" /> i - VI - iv - VII</label>
+      <label><input type="checkbox" value="I - vi - iii - IV" /> I - vi - iii - IV</label>
+      <label><input type="checkbox" value="vi - ♭VII - V - I" /> vi - ♭VII - V - I</label>
+      <label><input type="checkbox" value="I - II - IV - V" /> I - II - IV - V</label>
+      <label><input type="checkbox" value="I - IV - vi - IV" /> I - IV - vi - IV</label>
+      <label><input type="checkbox" value="i - III - vi - V" /> i - III - vi - V</label>
+      <label><input type="checkbox" value="I - IV - V - IV" /> I - IV - V - IV</label>
+      <label><input type="checkbox" value="i - VII - VI - VII" /> i - VII - VI - VII</label>
+      <label><input type="checkbox" value="I - ♭VII - IV - V" /> I - ♭VII - IV - V</label>
+      <label><input type="checkbox" value="i - v - VI - VII" /> i - v - VI - VII</label>
+      <label><input type="checkbox" value="I - vi - IV - V" /> I - vi - IV - V</label>
+      <label><input type="checkbox" value="V - IV - I - V" /> V - IV - I - V</label>
+      <label><input type="checkbox" value="I - V - IV - I" /> I - V - IV - I</label>
+      <label><input type="checkbox" value="i - VI - iv - v" /> i - VI - iv - v</label>
+      <label><input type="checkbox" value="I - V - VIsus2" /> I - V - VIsus2</label>
       <label><input type="checkbox" value="I - bVII - IV" /> I - bVII - IV</label>
     </div>
 
@@ -229,7 +271,7 @@
 
     <!-- NEW Preview Section -->
     <div style="margin-top: 20px;">
-      <button onclick="previewChords()">Preview Progression in Key</button>
+      <button class="fancy-button" onclick="previewChords()">Preview Progression in Key</button>
       <div id="previewOutput" style="margin-top:15px; font-weight:600;"></div>
       <div id="devModeBox"></div>
     </div>
@@ -272,18 +314,13 @@
       const chords = prog.split(/\s*[-–—]\s*/);
       if (chords.length < 2) return false;
 
-      // Flats/sharps before numeral, extensions (sus/add/maj/dim/aug/o) after.
       const chordRegex = /^([b♭#♯]?)([IV]+|[iv]+)(\(?((sus|add|maj|dim|aug|o)?[0-9]*)\)?)?$/;
-
-      for (let ch of chords) {
-        ch = ch.trim();
-        const m = chordRegex.exec(ch);
+      return chords.every(ch => {
+        const m = chordRegex.exec(ch.trim());
         if (!m) return false;
         const num = m[2];
-        // no mixed-case in the numeral
-        if (/[IV]/.test(num) && /[iv]/.test(num)) return false;
-      }
-      return true;
+        return !( /[IV]/.test(num) && /[iv]/.test(num) );
+      });
     }
 
     // === Add Custom Progression ===
@@ -291,20 +328,11 @@
       const inp = document.getElementById('customProg');
       const val = inp.value.trim();
       const err = document.getElementById('customProgError');
-
       if (!validateRomanNumeralProg(val)) {
         err.style.display = 'block';
         return;
       }
       err.style.display = 'none';
-
-      // prevent dupes
-      const exists = [...document.querySelectorAll('#chordList label')]
-        .some(lbl => lbl.textContent.trim() === val);
-      if (exists) {
-        alert('This progression already exists!');
-        return;
-      }
 
       const list = document.getElementById('chordList');
       const label = document.createElement('label');
@@ -312,14 +340,9 @@
       cb.type = 'checkbox'; cb.value = val; cb.checked = true;
       label.appendChild(cb);
       label.appendChild(document.createTextNode(' ' + val));
-
       const btn = document.createElement('button');
       btn.textContent = '✖';
-      btn.title = 'Remove progression';
-      btn.onclick = e => {
-        e.preventDefault();
-        list.removeChild(label);
-      };
+      btn.onclick = e => { e.preventDefault(); label.remove(); };
       label.appendChild(btn);
       list.appendChild(label);
       inp.value = '';
@@ -327,90 +350,78 @@
 
     // === Rhythm Logic ===
     const rhythmGrid = document.getElementById('rhythmGrid');
-    const beats = [];
-    for (let i = 0; i < 8; i++) {
-      const box = document.createElement('div');
-      box.className = 'beat-box';
-      box.textContent = i+1;
-      box.onclick = () => {
-        box.classList.toggle('active');
-        beats[i] = box.classList.contains('active');
-      };
-      rhythmGrid.appendChild(box);
-      beats.push(false);
+    let rhythmPattern = Array(8).fill(false);
+    function renderRhythmGrid() {
+      rhythmGrid.innerHTML = '';
+      rhythmPattern.forEach((on, i) => {
+        const box = document.createElement('div');
+        box.className = 'beat-box' + (on?' active':'');
+        box.textContent = i+1;
+        box.onclick = () => {
+          rhythmPattern[i] =!rhythmPattern[i];
+          renderRhythmGrid();
+        };
+        rhythmGrid.appendChild(box);
+      });
     }
     function resetRhythm() {
-      beats.fill(false);
-      document.querySelectorAll('.beat-box').forEach(b => b.classList.remove('active'));
+      rhythmPattern.fill(false);
+      renderRhythmGrid();
     }
+    renderRhythmGrid();
 
     // === Chord → Note Parsing & Preview ===
     const notesSharp = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
     const notesFlat  = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
     const majorDeg   = { I:0, II:2, III:4, IV:5, V:7, VI:9, VII:11 };
     const minorDeg   = { i:0, ii:2, iii:3, iv:5, v:7, VI:8, VII:10 };
+    function normAcc(a){return a.replace('♭','b').replace('♯','#');}
+    function idxOf(n){let i=notesSharp.indexOf(n);return i>=0?i:notesFlat.indexOf(n);}
 
-    function normAcc(a) { return a.replace('♭','b').replace('♯','#'); }
-    function idxOf(note) {
-      const i = notesSharp.indexOf(note); 
-      return i >= 0 ? i : notesFlat.indexOf(note);
+    function parseChordSymbol(chord,key){
+      const m = /^([b#]?)([IViv]+)(?:\(?((sus|add|maj|dim|aug|o)?\d*)\)?)?$/.exec(chord);
+      if(!m) return null;
+      let [ ,acc,num,ext ]=m;
+      num = num; ext = ext||'';
+      acc = normAcc(acc);
+      const map = /[IV]/.test(num)?majorDeg:minorDeg;
+      let sem=map[num]; if(acc==='b') sem--; if(acc==='#') sem++;
+      sem=(sem+12)%12; const root=notesSharp[(idxOf(key)+sem)%12];
+      let qual = /dim|o/.test(ext)?'dim':/aug/.test(ext)?'aug':(/[IV]/.test(num)?'maj':'min');
+      return {display:`${root}${qual!=='maj'?qual:''}${ext}`};
     }
 
-    function parseChordSymbol(chord, keyRoot) {
-      const re = /^([b#]?)([IViv]+)(\(?((sus|add|maj|dim|aug|o)?[0-9]*)\)?)?$/;
-      const m = re.exec(chord);
-      if (!m) return null;
-      const acc = normAcc(m[1]);
-      const num = m[2];
-      const ext = m[4] || '';
-      const degMap = /[IV]/.test(num) ? majorDeg : minorDeg;
-      let semis = degMap[num];
-      if (acc==='b') semis--; if(acc==='#') semis++;
-      semis = (semis + 12)%12;
-      const rootIdx = idxOf(keyRoot);
-      const note    = notesSharp[(rootIdx+semis)%12];
-      let quality = /dim|o/.test(ext)  ? 'dim'
-                  : /aug/.test(ext)   ? 'aug'
-                  : /[IV]/.test(num)  ? 'maj'
-                  : 'min';
-      return { 
-        display: `${note}${quality!=='maj'?quality:''}${ext}` 
-      };
-    }
-
-    function previewChords() {
-      const key  = document.getElementById('key').value;
+    function previewChords(){
+      const key = document.getElementById('key').value;
       const outs = document.getElementById('previewOutput');
       const devb = document.getElementById('devModeBox');
-      const sel  = [...document.querySelectorAll('#chordList input:checked')];
-      if (!sel.length) {
-        outs.textContent = 'No progressions selected!';
-        devb.style.display = 'none';
+      const sel  = [...document.querySelectorAll('#chordList input:checked')].map(cb=>cb.value);
+      // Show mapping for ALL roman numerals I–VII & i–vii
+      const allRomans = ['I','II','III','IV','V','VI','VII','i','ii','iii','iv','v','vi','vii'];
+      let devText = `All chords in key ${key}:\n`;
+      allRomans.forEach(rn=>{
+        const p=parseChordSymbol(rn,key);
+        devText += `${rn} → ${p?p.display:'?'}\n`;
+      });
+      devb.textContent = devText;
+      devb.style.display = devMode?'block':'none';
+
+      if(!sel.length){
+        outs.textContent='No progressions selected!';
         return;
       }
-      let text='', dev='';
-      sel.forEach((cb,i) => {
-        text += `Prog ${i+1}: ${cb.value}\n`;
-        const parts = cb.value.split(/\s*[-–—]\s*/).map(ch => {
-          const p = parseChordSymbol(ch, key);
-          dev += p
-            ? `${ch} → ${p.display}\n`
-            : `✖ failed to parse ${ch}\n`;
-          return p ? p.display : `${ch}(?)`;
-        });
-        text += parts.join(' - ') + '\n\n';
-      });
-      outs.textContent = text;
-      devb.textContent    = dev;
-      devb.style.display  = devMode ? 'block' : 'none';
+      // pick a random progression
+      const prog = sel[Math.floor(Math.random()*sel.length)];
+      const parts = prog.split(/\s*[-–—]\s*/).map(ch=>parseChordSymbol(ch.trim(),key)?.display||ch);
+      outs.textContent = `Random progression in ${key}:\n${parts.join(' - ')}`;
     }
 
     // Toggle Dev Mode with F9
-    let devMode = false;
-    document.addEventListener('keydown', e => {
-      if (e.key==='F9') {
-        devMode = !devMode;
-        document.getElementById('devModeBox').style.display = devMode ? 'block' : 'none';
+    let devMode=false;
+    document.addEventListener('keydown',e=>{
+      if(e.key==='F9'){
+        devMode=!devMode;
+        document.getElementById('devModeBox').style.display=devMode?'block':'none';
       }
     });
   </script>
