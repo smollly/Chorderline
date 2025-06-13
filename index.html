@@ -1,450 +1,285 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Chorderline</title>
-  <style>
-    body {
-      background-color: #f0f0f0;
-      color: #000;
-      font-family: sans-serif;
-      padding: 20px;
-      transition: background-color 0.5s, color 0.5s;
-    }
-    .darkmode {
-      background-color: #121212;
-      color: #fff;
-    }
-    .section-box {
-      background: white;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      transition: background-color 0.5s, color 0.5s;
-    }
-    .darkmode .section-box {
-      background: #1e1e1e;
-      color: #fff;
-      box-shadow: none;
-    }
-    nav.navbar {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    nav.navbar button {
-      background: none;
-      border: 1px solid currentColor;
-      border-radius: 6px;
-      padding: 6px 12px;
-      font-weight: bold;
-      cursor: pointer;
-      color: inherit;
-      transition: background-color 0.3s;
-    }
-    nav.navbar button:hover {
-      background-color: #ddd;
-    }
-    .darkmode nav.navbar button:hover {
-      background-color: #333;
-    }
-
-    /* ========== CHORD LIST ========== */
-    #chordList {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px 16px;
-      padding-top: 10px;
-    }
-    #chordList label {
-      position: relative;
-      padding-right: 30px;
-      display: flex;
-      align-items: center;
-    }
-    #chordList label button {
-      position: absolute;
-      right: 4px;
-      background: transparent;
-      border: none;
-      color: red;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 1.2em;
-      user-select: none;
-    }
-
-    /* ======= PREVIEW BUTTON GLOW UP ======= */
-    button.fancy-button {
-      background-color: #6200ea;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 10px 20px;
-      font-weight: bold;
-      font-size: 1.1em;
-      cursor: pointer;
-      box-shadow: 0 0 10px #6200ea;
-      transition: box-shadow 0.3s ease-in-out, transform 0.15s ease;
-    }
-    button.fancy-button:hover {
-      box-shadow: 0 0 20px #9a4dff, 0 0 30px #bb7fff;
-      transform: scale(1.05);
-    }
-
-    .toggle-darkmode {
-      margin-left: auto;
-      font-weight: bold;
-    }
-    input[type="text"], select, input[type="number"] {
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      padding: 5px;
-      font-size: 1em;
-      margin-left: 8px;
-    }
-    input[type="number"] {
-      width: 80px;
-    }
-    label {
-      font-weight: 600;
-    }
-
-    /* Rhythm grid styling */
-    #rhythmGrid {
-      display: grid;
-      grid-template-columns: repeat(8, 40px);
-      gap: 6px;
-      margin-top: 10px;
-      user-select: none;
-    }
-    .beat-box {
-      width: 40px;
-      height: 40px;
-      border: 2px solid #888;
-      border-radius: 6px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 1.2em;
-      transition: background-color 0.3s, border-color 0.3s;
-    }
-    .beat-box.active {
-      background-color: #4caf50;
-      border-color: #388e3c;
-      color: white;
-    }
-    .darkmode .beat-box {
-      border-color: #aaa;
-    }
-    .darkmode .beat-box.active {
-      background-color: #81c784;
-      border-color: #4caf50;
-    }
-
-    /* ======= DEV MODE BOX ======= */
-    #devModeBox {
-      background: #222;
-      color: #0f0;
-      font-family: monospace;
-      white-space: pre-wrap;
-      margin-top: 20px;
-      padding: 10px;
-      border-radius: 8px;
-      max-height: 200px;
-      overflow-y: auto;
-      display: none;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Chorderline</title>
+<style>
+  /* === Your existing CSS === */
+  body {
+    background: #222;
+    color: #ddd;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  h1 {
+    text-align: center;
+    margin-top: 20px;
+  }
+  .navbar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    background: #333;
+  }
+  .navbar button {
+    background: #555;
+    color: #eee;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.3s;
+  }
+  .navbar button:hover {
+    background: #777;
+  }
+  .toggle-darkmode {
+    margin-left: auto;
+    background: #222;
+    color: #eee;
+  }
+  .section-box {
+    max-width: 600px;
+    margin: 20px auto;
+    background: #333;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  label {
+    display: block;
+    margin: 10px 0 5px;
+  }
+  input[type="text"], select, textarea {
+    width: 100%;
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #555;
+    background: #222;
+    color: #eee;
+  }
+  #previewOutput {
+    white-space: pre-wrap;
+    font-family: monospace;
+    background: #222;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #555;
+    min-height: 100px;
+    margin-top: 10px;
+  }
+  .hidden {
+    display: none;
+  }
+</style>
 </head>
 <body>
 
-  <h1>🎸 Chorderline</h1>
+<h1>🎸 Chorderline</h1>
 
-  <!-- Navigation -->
-  <nav class="navbar section-box">
-    <button onclick="showPage('info')">Info</button>
-    <button onclick="showPage('setup')">Setup</button>
-    <button onclick="showPage('chord')">Chord</button>
-    <button onclick="showPage('rhythm')">Rhythm</button>
-    <button onclick="showPage('preview')">Preview</button>
-    <button class="toggle-darkmode" onclick="toggleDarkMode()">Toggle Darkmode</button>
-  </nav>
+<nav class="navbar section-box">
+  <button onclick="showPage('info')">Info</button>
+  <button onclick="showPage('setup')">Setup</button>
+  <button onclick="showPage('chord')">Chord</button>
+  <button onclick="showPage('rhythm')">Rhythm</button>
+  <button onclick="showPage('preview')">Preview</button>
+  <button class="toggle-darkmode" onclick="toggleDarkMode()">Toggle Darkmode</button>
+</nav>
 
-  <!-- Pages -->
-  <div id="info" class="page section-box active">
-    <h2>Welcome to Chorderline</h2>
-    <p>This is a random post-punk chord & rhythm generator. Move through each tab to configure your generation. “Setup” handles basic key info, “Chord” handles progressions, and so on. Simple as that.</p>
+<!-- Pages -->
+<section id="info" class="section-box">
+  <h2>Info</h2>
+  <p>Welcome to Chorderline! Use the tabs above to navigate.</p>
+</section>
+
+<section id="setup" class="section-box hidden">
+  <h2>Setup</h2>
+  <label for="key">Key:</label>
+  <select id="key">
+    <option value="C" selected>C</option>
+    <option value="C#">C# / Db</option>
+    <option value="D">D</option>
+    <option value="D#">D# / Eb</option>
+    <option value="E">E</option>
+    <option value="F">F</option>
+    <option value="F#">F# / Gb</option>
+    <option value="G">G</option>
+    <option value="G#">G# / Ab</option>
+    <option value="A">A</option>
+    <option value="A#">A# / Bb</option>
+    <option value="B">B</option>
+  </select>
+</section>
+
+<section id="chord" class="section-box hidden">
+  <h2>Chord List</h2>
+  <p>Select chords to preview:</p>
+  <div id="chordList">
+    <label><input type="checkbox" value="I" checked /> I</label>
+    <label><input type="checkbox" value="ii" checked /> ii</label>
+    <label><input type="checkbox" value="iii" checked /> iii</label>
+    <label><input type="checkbox" value="IV" checked /> IV</label>
+    <label><input type="checkbox" value="V" checked /> V</label>
+    <label><input type="checkbox" value="vi" checked /> vi</label>
+    <label><input type="checkbox" value="vii°" /> vii°</label>
   </div>
+</section>
 
-  <div id="setup" class="page section-box" style="display:none;">
-    <h2>Setup</h2>
-    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-      <div>
-        <label for="key">Key:</label>
-        <select id="key">
-          <option value="C">C</option>
-          <option value="C#">C# / Db</option>
-          <option value="D">D</option>
-          <option value="D#">D# / Eb</option>
-          <option value="E">E</option>
-          <option value="F">F</option>
-          <option value="F#">F# / Gb</option>
-          <option value="G">G</option>
-          <option value="G#">G# / Ab</option>
-          <option value="A">A</option>
-          <option value="A#">A# / Bb</option>
-          <option value="B">B</option>
-        </select>
-      </div>
-      <div>
-        <label for="tempo">Tempo (BPM):</label>
-        <input type="number" id="tempo" min="40" max="240" value="120" />
-      </div>
-      <div>
-        <label for="timesig">Time Signature:</label>
-        <select id="timesig">
-          <option value="4/4">4/4</option>
-          <option value="3/4">3/4</option>
-          <option value="6/8">6/8</option>
-          <option value="7/8">7/8</option>
-        </select>
-      </div>
-    </div>
-  </div>
+<section id="rhythm" class="section-box hidden">
+  <h2>Rhythm (Work in Progress)</h2>
+  <p>Coming soon...</p>
+</section>
 
-  <div id="chord" class="page section-box" style="display:none;">
-    <h2>Chord Progressions</h2>
-    <p>
-      Select one or more progressions below. Chorderline will pick one at random when generating.
-      These are written using Roman numerals for flexibility across keys and modes.
-      You can also enter your own progression if you don’t see one you like.
-    </p>
+<section id="preview" class="section-box hidden">
+  <h2>Chord Preview</h2>
+  <button onclick="previewChords()">Show Chords</button>
+  <pre id="previewOutput">Select some chords and click "Show Chords"!</pre>
+  <label><input type="checkbox" id="devModeBox" /> Show Debug Info</label>
+</section>
 
-    <div style="margin-bottom: 10px;">
-      <button onclick="toggleCheckboxes(true)">Apply All</button>
-      <button onclick="toggleCheckboxes(false)">Disable All</button>
-    </div>
+<script>
+  // === Page Navigation ===
+  function showPage(pageId) {
+    const pages = ['info','setup','chord','rhythm','preview'];
+    pages.forEach(id => {
+      document.getElementById(id).classList.toggle('hidden', id !== pageId);
+    });
+  }
 
-    <div id="chordList">
-      <!-- YOUR FULL HARDCODED PROGRESIONS BACK IN -->
-      <label><input type="checkbox" value="I - V - IV" /> I - V - IV</label>
-      <label><input type="checkbox" value="I - V - vi - IV" /> I - V - vi - IV</label>
-      <label><input type="checkbox" value="V - vi - IV" /> V - vi - IV</label>
-      <label><input type="checkbox" value="i - VI - III - V" /> i - VI - III - V</label>
-      <label><input type="checkbox" value="I - V - vi - IV - ii - V" /> I - V - vi - IV - ii - V</label>
-      <label><input type="checkbox" value="I - V - vi - IV - I" /> I - V - vi - IV - I</label>
-      <label><input type="checkbox" value="I - iii - ii - V" /> I - iii - ii - V</label>
-      <label><input type="checkbox" value="i - VII - III - v" /> i - VII - III - v</label>
-      <label><input type="checkbox" value="vi - I - V - IV" /> vi - I - V - IV</label>
-      <label><input type="checkbox" value="i - VI - v - VII" /> i - VI - v - VII</label>
-      <label><input type="checkbox" value="I - V - IV - V - vi" /> I - V - IV - V - vi</label>
-      <label><input type="checkbox" value="i - VI - iv - VII" /> i - VI - iv - VII</label>
-      <label><input type="checkbox" value="I - vi - iii - IV" /> I - vi - iii - IV</label>
-      <label><input type="checkbox" value="vi - ♭VII - V - I" /> vi - ♭VII - V - I</label>
-      <label><input type="checkbox" value="I - II - IV - V" /> I - II - IV - V</label>
-      <label><input type="checkbox" value="I - IV - vi - IV" /> I - IV - vi - IV</label>
-      <label><input type="checkbox" value="i - III - vi - V" /> i - III - vi - V</label>
-      <label><input type="checkbox" value="I - IV - V - IV" /> I - IV - V - IV</label>
-      <label><input type="checkbox" value="i - VII - VI - VII" /> i - VII - VI - VII</label>
-      <label><input type="checkbox" value="I - ♭VII - IV - V" /> I - ♭VII - IV - V</label>
-      <label><input type="checkbox" value="i - v - VI - VII" /> i - v - VI - VII</label>
-      <label><input type="checkbox" value="I - vi - IV - V" /> I - vi - IV - V</label>
-      <label><input type="checkbox" value="V - IV - I - V" /> V - IV - I - V</label>
-      <label><input type="checkbox" value="I - V - IV - I" /> I - V - IV - I</label>
-      <label><input type="checkbox" value="i - VI - iv - v" /> i - VI - iv - v</label>
-      <label><input type="checkbox" value="I - V - VIsus2" /> I - V - VIsus2</label>
-      <label><input type="checkbox" value="I - bVII - IV" /> I - bVII - IV</label>
-    </div>
+  // Show default page
+  showPage('info');
 
-    <div style="margin-top: 10px;">
-      <label for="customProg">Custom progression:</label>
-      <input type="text" id="customProg" placeholder="Eg. I - IV - V" />
-      <button onclick="addCustomProg()">Add</button>
-      <p id="customProgError" style="color:red; display:none;">Invalid progression format!</p>
-    </div>
-
-    <!-- NEW Preview Section -->
-    <div style="margin-top: 20px;">
-      <button class="fancy-button" onclick="previewChords()">Preview Progression in Key</button>
-      <div id="previewOutput" style="margin-top:15px; font-weight:600;"></div>
-      <div id="devModeBox"></div>
-    </div>
-  </div>
-
-  <div id="rhythm" class="page section-box" style="display:none;">
-    <h2>Rhythm Pattern</h2>
-    <p>Click on the boxes below to toggle beats on/off for an 8-beat pattern:</p>
-    <div id="rhythmGrid"></div>
-    <p><button onclick="resetRhythm()">Reset Pattern</button></p>
-  </div>
-
-  <div id="preview" class="page section-box" style="display:none;">
-    <h2>Preview</h2>
-    <p>Coming soon! (Imagine some sick chord + rhythm jam here)</p>
-  </div>
-
-  <script>
-    // === Darkmode & Nav ===
-    function toggleDarkMode() {
-      document.body.classList.toggle('darkmode');
+  // === Dark Mode Toggle ===
+  function toggleDarkMode() {
+    document.body.classList.toggle('darkmode');
+    if(document.body.classList.contains('darkmode')) {
+      document.body.style.background = '#111';
+      document.body.style.color = '#eee';
+    } else {
+      document.body.style.background = '#222';
+      document.body.style.color = '#ddd';
     }
-    function showPage(id) {
-      document.querySelectorAll('.page').forEach(p => {
-        p.style.display = 'none'; p.classList.remove('active');
-      });
-      document.getElementById(id).style.display = 'block';
-      document.getElementById(id).classList.add('active');
+  }
+
+  // === Chord Parsing Utilities ===
+  const notesSharp = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+  const notesFlat  = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+
+  const majorDeg = { I:0, II:2, III:4, IV:5, V:7, VI:9, VII:11 };
+  const minorDeg = { i:0, ii:2, iii:3, iv:5, v:7, vi:8, vii:10 };
+
+  // Normalize accidentals
+  function normAcc(a){
+    return a.replace('♭','b').replace('♯','#');
+  }
+  // Get index of note in notesSharp or notesFlat arrays
+  function idxOf(n){
+    let i = notesSharp.indexOf(n);
+    if(i >= 0) return i;
+    return notesFlat.indexOf(n);
+  }
+
+  // NEW Chord parsing function that handles Roman numerals with accidentals and extensions
+  function parseChordSymbol(chord, key) {
+    chord = chord.trim();
+    // Regex breakdown:
+    // ^([b#♭♯]?)([IViv]+)(.*)?$
+    // Group 1 = accidental modifier before numeral (b, #, ♭, ♯)
+    // Group 2 = roman numeral chord degree
+    // Group 3 = any extensions or alterations after numeral (like °, dim, maj7, sus4)
+    const match = /^([b#♭♯]?)([IViv]+)(.*)?$/.exec(chord);
+    if (!match) {
+      return { error: `Could not parse chord symbol '${chord}'` };
     }
 
-    // === Toggle All Checkboxes ===
-    function toggleCheckboxes(on) {
-      document.querySelectorAll('#chordList input[type=checkbox]')
-        .forEach(cb => cb.checked = on);
+    let [, acc, roman, ext] = match;
+    acc = normAcc(acc);
+    ext = ext || '';
+
+    // Determine if major or minor by checking case of roman numeral
+    const isMajor = roman === roman.toUpperCase();
+    const map = isMajor ? majorDeg : minorDeg;
+
+    // Fix roman numeral like vii° -> vii (strip any trailing special chars before lookup)
+    let baseRoman = roman.toUpperCase();
+    // Special fix: minor degrees map keys are lowercase roman numerals, so handle that
+    if (!isMajor) baseRoman = roman.toLowerCase();
+
+    let sem = map[baseRoman];
+    if (sem === undefined) {
+      return { error: `Unknown roman numeral degree '${roman}' in chord '${chord}'` };
     }
 
-    // === Validation for custom chords ===
-    function validateRomanNumeralProg(prog) {
-      if (!prog || !prog.trim()) return false;
-      const chords = prog.split(/\s*[-–—]\s*/);
-      if (chords.length < 2) return false;
+    // Apply accidental modifiers
+    if (acc === 'b') sem--;
+    if (acc === '#') sem++;
 
-      const chordRegex = /^([b♭#♯]?)([IV]+|[iv]+)(\(?((sus|add|maj|dim|aug|o)?[0-9]*)\)?)?$/;
-      return chords.every(ch => {
-        const m = chordRegex.exec(ch.trim());
-        if (!m) return false;
-        const num = m[2];
-        return !( /[IV]/.test(num) && /[iv]/.test(num) );
-      });
+    // Wrap around 0-11 semitones
+    sem = (sem + 12) % 12;
+
+    // Find the key root index
+    const keyIndex = idxOf(key);
+    if (keyIndex < 0) {
+      return { error: `Unknown key '${key}'` };
     }
 
-    // === Add Custom Progression ===
-    function addCustomProg() {
-      const inp = document.getElementById('customProg');
-      const val = inp.value.trim();
-      const err = document.getElementById('customProgError');
-      if (!validateRomanNumeralProg(val)) {
-        err.style.display = 'block';
-        return;
-      }
-      err.style.display = 'none';
+    // Calculate final note name
+    const note = notesSharp[(keyIndex + sem) % 12];
 
-      const list = document.getElementById('chordList');
-      const label = document.createElement('label');
-      const cb = document.createElement('input');
-      cb.type = 'checkbox'; cb.value = val; cb.checked = true;
-      label.appendChild(cb);
-      label.appendChild(document.createTextNode(' ' + val));
-      const btn = document.createElement('button');
-      btn.textContent = '✖';
-      btn.onclick = e => { e.preventDefault(); label.remove(); };
-      label.appendChild(btn);
-      list.appendChild(label);
-      inp.value = '';
+    // Determine chord quality
+    // If chord has dim or ° in extension, mark as diminished
+    // If chord has aug, mark as augmented
+    // Else if minor chord, add 'm', else no suffix for major
+    let quality = '';
+    if (/dim|o|°/.test(ext)) {
+      quality = 'dim';
+    } else if (/aug/.test(ext)) {
+      quality = 'aug';
+    } else {
+      quality = isMajor ? '' : 'm';
     }
 
-    // === Rhythm Logic ===
-    const rhythmGrid = document.getElementById('rhythmGrid');
-    let rhythmPattern = Array(8).fill(false);
-    function renderRhythmGrid() {
-      rhythmGrid.innerHTML = '';
-      rhythmPattern.forEach((on, i) => {
-        const box = document.createElement('div');
-        box.className = 'beat-box' + (on?' active':'');
-        box.textContent = i+1;
-        box.onclick = () => {
-          rhythmPattern[i] =!rhythmPattern[i];
-          renderRhythmGrid();
-        };
-        rhythmGrid.appendChild(box);
-      });
-    }
-    function resetRhythm() {
-      rhythmPattern.fill(false);
-      renderRhythmGrid();
-    }
-    renderRhythmGrid();
+    // Compose full chord name (note + quality + extension)
+    const displayChord = `${note}${quality}${ext}`;
 
-    // === Chord → Note Parsing & Preview ===
-    const notesSharp = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
-    const notesFlat  = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+    return { display: displayChord };
+  }
 
-    // === Roman numeral semitone offsets ===
-const majorDeg = { I:0, II:2, III:4, IV:5, V:7, VI:9, VII:11 };
-const minorDeg = { i:0, ii:2, iii:3, iv:5, v:7, vi:8, vii:10 };
+  // === Main preview function ===
+  function previewChords() {
+    const key = document.getElementById('key').value;
+    const outs = document.getElementById('previewOutput');
+    const devb = document.getElementById('devModeBox').checked;
+    const selectedCheckboxes = document.querySelectorAll('#chordList input:checked');
+    const selectedChords = Array.from(selectedCheckboxes).map(cb => cb.value);
 
-// New additions: support for ♭ and ♯ degrees
-const flatMajorDeg = { bII:1, bIII:3, bVI:8, bVII:10 };
-const flatMinorDeg = { bii:1, biii:2, bvi:7, bvii:9 };
-
-const sharpMajorDeg = { '#II':3, '#III':5, '#IV':6, '#V':8, '#VI':10, '#VII':0 };
-const sharpMinorDeg = { '#ii':4, '#iii':6, '#iv':7, '#v':9, '#vi':11, '#vii':1 };
-
-
-    function normAcc(a){return a.replace('♭','b').replace('♯','#');}
-    function idxOf(n){let i=notesSharp.indexOf(n);return i>=0?i:notesFlat.indexOf(n);}
-
-    function parseChordSymbol(chord, key) {
-      const m = /^([b#]?)([IViv]+)(?:\(?((sus|add|maj|dim|aug|o)?\d*)\)?)?$/.exec(chord);
-      if (!m) return null;
-      let [ , acc, num, ext ] = m;
-      ext = ext || '';
-      acc = normAcc(acc);
-let map;
-if (/[IV]/.test(num) && num === num.toUpperCase()) {
-  map = { ...majorDeg, ...flatMajorDeg, ...sharpMajorDeg };
-} else {
-  map = { ...minorDeg, ...flatMinorDeg, ...sharpMinorDeg };
-}
-      let sem = map[num];
-      if (sem === undefined) return null; // avoid returning undefined chords
-      if (acc === 'b') sem--;
-      if (acc === '#') sem++;
-      sem = (sem + 12) % 12;
-      const root = notesSharp[(idxOf(key) + sem) % 12];
-      let qual = /dim|o/.test(ext) ? 'dim' : /aug/.test(ext) ? 'aug' : (/[IV]/.test(num) && num === num.toUpperCase() ? 'maj' : 'min');
-      return { display: `${root}${qual !== 'maj' ? qual : ''}${ext}` };
-}
-
-
-    function previewChords(){
-      const key = document.getElementById('key').value;
-      const outs = document.getElementById('previewOutput');
-      const devb = document.getElementById('devModeBox');
-      const sel  = [...document.querySelectorAll('#chordList input:checked')].map(cb=>cb.value);
-      // Show mapping for ALL roman numerals I–VII & i–vii
-      const allRomans = ['I','II','III','IV','V','VI','VII','i','ii','iii','iv','v','vi','vii'];
-      let devText = `All chords in key ${key}:\n`;
-      allRomans.forEach(rn=>{
-        const p=parseChordSymbol(rn,key);
-        devText += `${rn} → ${p?p.display:'?'}\n`;
-      });
-      devb.textContent = devText;
-      devb.style.display = devMode?'block':'none';
-
-      if(!sel.length){
-        outs.textContent='No progressions selected!';
-        return;
-      }
-      // pick a random progression
-      const prog = sel[Math.floor(Math.random()*sel.length)];
-      const parts = prog.split(/\s*[-–—]\s*/).map(ch=>parseChordSymbol(ch.trim(),key)?.display||ch);
-      outs.textContent = `Random progression in ${key}:\n${parts.join(' - ')}`;
+    if (selectedChords.length === 0) {
+      outs.textContent = 'No chords selected!';
+      return;
     }
 
-    // Toggle Dev Mode with F9
-    let devMode=false;
-    document.addEventListener('keydown',e=>{
-      if(e.key==='F9'){
-        devMode=!devMode;
-        document.getElementById('devModeBox').style.display=devMode?'block':'none';
+    let outputText = `Key: ${key}\n\n`;
+    let debugText = '';
+
+    selectedChords.forEach(chordSymbol => {
+      const parsed = parseChordSymbol(chordSymbol, key);
+      if (parsed.error) {
+        outputText += `${chordSymbol}: ERROR (${parsed.error})\n`;
+        if (devb) debugText += `Parsing failed for '${chordSymbol}': ${parsed.error}\n`;
+      } else {
+        outputText += `${chordSymbol}: ${parsed.display}\n`;
       }
     });
-  </script>
+
+    if (devb && debugText) {
+      outputText += `\n--- DEBUG INFO ---\n${debugText}`;
+    }
+
+    outs.textContent = outputText;
+  }
+</script>
+
 </body>
 </html>
