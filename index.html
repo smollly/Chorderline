@@ -374,8 +374,17 @@
     const notesSharp = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
     const notesFlat  = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
 
-    const majorDeg = { I:0, II:2, III:4, IV:5, V:7, VI:9, VII:11 };
-    const minorDeg = { i:0, ii:2, iii:3, iv:5, v:7, vi:8, vii:10 }; // ✅ fixed here
+    // === Roman numeral semitone offsets ===
+const majorDeg = { I:0, II:2, III:4, IV:5, V:7, VI:9, VII:11 };
+const minorDeg = { i:0, ii:2, iii:3, iv:5, v:7, vi:8, vii:10 };
+
+// New additions: support for ♭ and ♯ degrees
+const flatMajorDeg = { bII:1, bIII:3, bVI:8, bVII:10 };
+const flatMinorDeg = { bii:1, biii:2, bvi:7, bvii:9 };
+
+const sharpMajorDeg = { '#II':3, '#III':5, '#IV':6, '#V':8, '#VI':10, '#VII':0 };
+const sharpMinorDeg = { '#ii':4, '#iii':6, '#iv':7, '#v':9, '#vi':11, '#vii':1 };
+
 
     function normAcc(a){return a.replace('♭','b').replace('♯','#');}
     function idxOf(n){let i=notesSharp.indexOf(n);return i>=0?i:notesFlat.indexOf(n);}
@@ -386,7 +395,12 @@
       let [ , acc, num, ext ] = m;
       ext = ext || '';
       acc = normAcc(acc);
-      const map = /[IV]/.test(num) && num === num.toUpperCase() ? majorDeg : minorDeg;
+let map;
+if (/[IV]/.test(num) && num === num.toUpperCase()) {
+  map = { ...majorDeg, ...flatMajorDeg, ...sharpMajorDeg };
+} else {
+  map = { ...minorDeg, ...flatMinorDeg, ...sharpMinorDeg };
+}
       let sem = map[num];
       if (sem === undefined) return null; // avoid returning undefined chords
       if (acc === 'b') sem--;
