@@ -373,23 +373,30 @@
     // === Chord → Note Parsing & Preview ===
     const notesSharp = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
     const notesFlat  = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
-    const majorDeg   = { I:0, II:2, III:4, IV:5, V:7, VI:9, VII:11 };
-    const minorDeg   = { i:0, ii:2, iii:3, iv:5, v:7, VI:8, VII:10 };
+
+    const majorDeg = { I:0, II:2, III:4, IV:5, V:7, VI:9, VII:11 };
+    const minorDeg = { i:0, ii:2, iii:3, iv:5, v:7, vi:8, vii:10 }; // ✅ fixed here
+
     function normAcc(a){return a.replace('♭','b').replace('♯','#');}
     function idxOf(n){let i=notesSharp.indexOf(n);return i>=0?i:notesFlat.indexOf(n);}
 
-    function parseChordSymbol(chord,key){
+    function parseChordSymbol(chord, key) {
       const m = /^([b#]?)([IViv]+)(?:\(?((sus|add|maj|dim|aug|o)?\d*)\)?)?$/.exec(chord);
-      if(!m) return null;
-      let [ ,acc,num,ext ]=m;
-      num = num; ext = ext||'';
+      if (!m) return null;
+      let [ , acc, num, ext ] = m;
+      ext = ext || '';
       acc = normAcc(acc);
-      const map = /[IV]/.test(num)?majorDeg:minorDeg;
-      let sem=map[num]; if(acc==='b') sem--; if(acc==='#') sem++;
-      sem=(sem+12)%12; const root=notesSharp[(idxOf(key)+sem)%12];
-      let qual = /dim|o/.test(ext)?'dim':/aug/.test(ext)?'aug':(/[IV]/.test(num)?'maj':'min');
-      return {display:`${root}${qual!=='maj'?qual:''}${ext}`};
-    }
+      const map = /[IV]/.test(num) && num === num.toUpperCase() ? majorDeg : minorDeg;
+      let sem = map[num];
+      if (sem === undefined) return null; // avoid returning undefined chords
+      if (acc === 'b') sem--;
+      if (acc === '#') sem++;
+      sem = (sem + 12) % 12;
+      const root = notesSharp[(idxOf(key) + sem) % 12];
+      let qual = /dim|o/.test(ext) ? 'dim' : /aug/.test(ext) ? 'aug' : (/[IV]/.test(num) && num === num.toUpperCase() ? 'maj' : 'min');
+      return { display: `${root}${qual !== 'maj' ? qual : ''}${ext}` };
+}
+
 
     function previewChords(){
       const key = document.getElementById('key').value;
